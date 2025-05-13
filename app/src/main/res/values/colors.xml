@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="birubca">#00B1D0</color>
+    <color name="hijautext">#0E3E3E</color>
+
+    <color name="bca_primary">#1454fb</color>
+    <color name="bca_secondary">#8cacf9</color>
+    <color name="bca_dark">#1b44c0</color>
+    <color name="bca_purple">#645c9c</color>
+    <color name="bca_brown">#cda79e</color>
+    <color name="bca_darkpurple">#292a52</color>
+
+
+    <!-- Primary Color (PinjemFin Blue) -->
+    <color name="pf_primary">#0060D6</color>
+
+    <!-- Secondary/Accent Color (PinjemFin Green) -->
+    <color name="pf_accent">#2CB88E</color>
+    <color name="pf_second_accent">#31CFA0</color>
+    <!-- Background Color -->
+    <color name="pf_background">#F5F9FF</color>
+
+    <!-- Input Field Background -->
+    <color name="pf_input_bg">#E0EAF6</color>
+
+    <!-- Text Colors -->
+    <color name="pf_text_primary">#1E1E1E</color>
+    <color name="pf_text_secondary">#4A4A4A</color>
+
+    <!-- Icon Colors -->
+    <color name="pf_icon_active">#0060D6</color>
+    <color name="pf_icon_inactive">#9AA7B6</color>
+
+    <!-- Optional Button Hover or Pressed State -->
+    <color name="pf_primary_dark">#004AAD</color>
+    <color name="pf_second_dark">#005FDF</color>
+</resources>

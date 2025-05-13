@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "606282342688",
+    "firebase_url": "https://praktikumfirebase-62989-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "praktikumfirebase-62989",
+    "storage_bucket": "praktikumfirebase-62989.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606282342688:android:5e891a335e4154c6137745",
+        "android_client_info": {
+          "package_name": "com.example.pinjemfinandroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4mNtYxA5J-zZIvEKTod7F9zP0HMmAmv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

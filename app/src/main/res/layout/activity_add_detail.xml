@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.AddDetailActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- EditText untuk input tempat dan tanggal lahir -->
+        <EditText
+            android:id="@+id/editTextTempatTglLahir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tempat, Tanggal Lahir"
+            android:inputType="text"/>
+
+        <!-- EditText untuk nomor telepon -->
+        <EditText
+            android:id="@+id/editTextNoTelp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nomor Telepon"
+            android:inputType="phone"/>
+
+        <!-- EditText untuk alamat -->
+        <EditText
+            android:id="@+id/editTextAlamat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Alamat"
+            android:inputType="text"/>
+
+        <!-- EditText untuk NIK -->
+        <EditText
+            android:id="@+id/editTextNik"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="NIK"
+            android:inputType="text"/>
+
+        <!-- EditText untuk nama ibu kandung -->
+        <EditText
+            android:id="@+id/editTextNamaIbuKandung"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nama Ibu Kandung"
+            android:inputType="text"/>
+
+        <!-- EditText untuk pekerjaan -->
+        <EditText
+            android:id="@+id/editTextPekerjaan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Pekerjaan"
+            android:inputType="text"/>
+
+        <!-- EditText untuk gaji -->
+        <EditText
+            android:id="@+id/editTextGaji"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Gaji"
+            android:inputType="numberDecimal"/>
+
+        <!-- EditText untuk nomor rekening -->
+        <EditText
+            android:id="@+id/editTextNoRek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nomor Rekening"
+            android:inputType="text"/>
+
+        <!-- EditText untuk status rumah -->
+        <EditText
+            android:id="@+id/editTextStatusRumah"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Status Rumah"
+            android:inputType="text"/>
+
+        <!-- Button untuk submit data -->
+        <Button
+            android:id="@+id/buttonSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shapebutton"
+            android:textColor="@color/white"
+            android:text="Submit" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
