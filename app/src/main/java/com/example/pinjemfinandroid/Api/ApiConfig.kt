@@ -6,7 +6,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 object ApiConfig {
 
-    private const val BASE_URL = "http://35.202.115.34/api/"
+    private const val BASE_URL = "http://34.30.17.63/api/"
+//private const val BASE_URL = "https://417c-120-188-36-27.ngrok-free.app/api/"
 //
 //    private val retrofit: Retrofit by lazy {
 //        val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -53,4 +54,6 @@ object ApiConfig {
     fun getApiService(token: String? = null): ApiService = provideRetrofit(token).create(ApiService::class.java)
     fun getPengajuanService(token: String? = null): PengajuanService = provideRetrofit(token).create(PengajuanService::class.java)
     fun getAkunService(token: String? = null): AkunService = provideRetrofit(token).create(AkunService::class.java)
+
+    fun uploadDokumenservice(token: String? = null): DokumenService = provideRetrofit(token).create(DokumenService::class.java)
 }

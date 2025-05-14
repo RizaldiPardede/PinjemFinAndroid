@@ -16,12 +16,12 @@
         android:orientation="vertical"
         android:background="@color/pf_primary"
         >
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
             android:gravity="center_horizontal">
-
 
 
             <LinearLayout
@@ -32,9 +32,7 @@
                 android:layout_marginTop="200dp"
                 android:background="@drawable/base_shape"
                 android:orientation="vertical"
-                android:padding="15dp"
-                >
-
+                android:padding="15dp">
 
 
                 <!-- Nama, Email, dsb -->
@@ -42,10 +40,10 @@
                     android:id="@+id/tv_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="70dp"
                     android:fontFamily="@font/poppins_bold"
                     android:text="Astari"
-                    android:layout_gravity="center"
                     android:textColor="@color/pf_text_primary"
                     android:textSize="18sp" />
 
@@ -53,35 +51,35 @@
                     android:id="@+id/tv_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginBottom="30dp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="astari@bcafinance.com"
-                    android:layout_gravity="center"
                     android:textColor="@color/pf_text_secondary"
                     android:textSize="14sp" />
+
                 <ImageView
                     android:id="@+id/banner_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/banner"
                     android:layout_gravity="center"
-                    />
+                    android:src="@drawable/banner" />
                 <!-- Tombol Update -->
                 <TextView
                     android:id="@+id/tv_listmenu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start"
                     android:layout_marginTop="15dp"
                     android:fontFamily="@font/poppins_bold"
                     android:text="Account Detail"
-                    android:layout_gravity="start"
                     android:textColor="@color/pf_text_primary"
                     android:textSize="14sp" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:listitem="@layout/menu_card"
                     />
 
                 <Button
@@ -109,13 +107,37 @@
                 android:layout_marginEnd="22dp"
                 android:src="@drawable/account_astari"
                 app:civ_border_color="@color/white"
-                app:civ_circle_background_color="@color/white"
-                app:civ_border_width="7dp" />
+                app:civ_border_width="7dp"
+                app:civ_circle_background_color="@color/white" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginHorizontal="170dp"
+                android:layout_marginVertical="170dp"
+                android:indeterminate="true"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
         </RelativeLayout>
+
+
         <!-- Profile Image -->
 
 
         <!-- Tambahkan elemen lain di sini -->
 
     </LinearLayout>
+
+
 </ScrollView>

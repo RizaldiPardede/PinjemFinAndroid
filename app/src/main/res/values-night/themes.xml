@@ -1,7 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.PinjemFinAndroid" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/bca_dark</item>
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
+
+
+    <style name="Theme.PinjemFinAndroid" parent="Base.Theme.PinjemFinAndroid" />
 </resources>
