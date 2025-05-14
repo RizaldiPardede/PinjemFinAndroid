@@ -1,18 +1,25 @@
 package com.example.pinjemfinandroid.Activity
 
+import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
 import android.location.Location
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
+import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import com.example.pinjemfinandroid.Model.DetailCustomerRequest
-import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.LocationHelper
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.ViewModel.AccountViewModel
-import com.example.pinjemfinandroid.ViewModel.AuthViewModel
+import com.example.pinjemfinandroid.ViewModel.DokumenViewModel
 import com.example.pinjemfinandroid.databinding.ActivityAddDetailBinding
 
 
@@ -23,6 +30,58 @@ class AddDetailActivity : AppCompatActivity() {
     private var longitude: Double? = null
     private val accountViewModel: AccountViewModel by viewModels()
     private lateinit var preferenceHelper: PreferenceHelper
+    private lateinit var dokumenViewModel: DokumenViewModel
+    var currentPhotoType: String? = null
+    private var photoUri: Uri? = null
+
+
+    private val cameraLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            when (currentPhotoType) {
+                "KTP" -> photoUri?.let {
+                    // Upload foto yang diambil dengan kamera
+                    uploadImage(it,"KTP")
+                }
+                "NPWP" -> photoUri?.let {
+                    // Upload foto yang diambil dengan kamera
+                    uploadImage(it,"NPWP")
+                }
+                "Selfie_KTP" -> photoUri?.let {
+                    // Upload foto yang diambil dengan kamera
+                    uploadImage(it,"Selfie_KTP")
+                }
+
+                "Kartu_Keluarga" -> photoUri?.let {
+                    // Upload foto yang diambil dengan kamera
+                    uploadImage(it,"Kartu_Keluarga")
+                }
+
+            }
+        }
+
+    private val galleryLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            when (currentPhotoType) {
+                "KTP" -> uri?.let {
+                    // Upload foto yang diambil dengan kamera
+                    uploadImage(it,"KTP")
+                }
+                "NPWP" -> uri?.let {
+                    // Upload foto yang diambil dengan kamera
+                    uploadImage(it,"NPWP")
+                }
+                "Selfie_KTP" -> uri?.let {
+                    // Upload foto yang diambil dengan kamera
+                    uploadImage(it,"Selfie_KTP")
+                }
+
+                "Kartu_Keluarga" -> uri?.let {
+                    // Upload foto yang diambil dengan kamera
+                    uploadImage(it,"Kartu_Keluarga")
+                }
+
+            }
+        }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddDetailBinding.inflate(layoutInflater)
@@ -30,7 +89,7 @@ class AddDetailActivity : AppCompatActivity() {
         locationHelper = LocationHelper(this)
         preferenceHelper = PreferenceHelper(this)
         binding.buttonSubmit.backgroundTintList = null
-
+        dokumenViewModel = ViewModelProvider(this).get(DokumenViewModel::class.java)
         showLocationPermissionDialog()
 
         if (preferenceHelper.getString("token").isNullOrEmpty()){
@@ -77,6 +136,26 @@ class AddDetailActivity : AppCompatActivity() {
                 }
             }
 
+        }
+
+        binding.buttonUploadKk.setOnClickListener{
+            currentPhotoType ="Kartu_Keluarga"
+            requestPermissionsFile()
+        }
+
+        binding.buttonUploadKtp.setOnClickListener{
+            currentPhotoType ="KTP"
+            requestPermissionsFile()
+        }
+
+        binding.buttonUploadNpwp.setOnClickListener{
+            currentPhotoType ="NPWP"
+            requestPermissionsFile()
+        }
+
+        binding.buttonUploadSelfieKtp.setOnClickListener{
+            currentPhotoType ="Selfie_KTP"
+            requestPermissionsFile()
         }
 
 
@@ -128,6 +207,130 @@ class AddDetailActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Izin lokasi ditolak", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    fun openCamera() {
+
+        photoUri = createImageUri() // Buat URI untuk menyimpan gambar
+        cameraLauncher.launch(photoUri) // Luncurkan kamera untuk mengambil gambar
+    }
+
+    // Fungsi untuk memilih gambar dari galeri
+    fun openGallery() {
+
+        galleryLauncher.launch("image/*") // Luncurkan galeri untuk memilih gambar
+
+    }
+
+    private fun createImageUri(): Uri {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "profile_${System.currentTimeMillis()}.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+        return this.contentResolver.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            contentValues
+        )!!
+    }
+
+
+    private fun uploadImage(uri: Uri,imagetype: String) {
+        // Panggil fungsi uploadImage dari ViewModel
+        val token = preferenceHelper.getString("token")
+
+        if (token != null && token.isNotEmpty()) {
+            // Token ada, lanjutkan upload gambar
+
+            dokumenViewModel.uploadImage(this, uri, imagetype, token)
+            dokumenViewModel.uploadResult.observe(this){
+                when (imagetype) {
+                    "KTP" -> {binding.imageViewKtp.setImageURI(uri)
+                        binding.imageViewKtp.visibility = View.VISIBLE
+                        binding.iconCheckKtp.visibility = View.VISIBLE}
+
+
+                    "NPWP" -> {binding.imageViewNpwp.setImageURI(uri)
+                        binding.imageViewNpwp.visibility = View.VISIBLE
+                        binding.iconCheckNpwp.visibility = View.VISIBLE}
+
+                    "Selfie_KTP" -> {binding.imageViewSelfieKtp.setImageURI(uri)
+                        binding.imageViewSelfieKtp.visibility = View.VISIBLE
+                        binding.iconCheckSelfieKtp.visibility = View.VISIBLE}
+
+                    "Kartu_Keluarga" -> {binding.imageViewKk.setImageURI(uri)
+                        binding.imageViewKk.visibility = View.VISIBLE
+                        binding.iconCheckKk.visibility = View.VISIBLE}
+
+                }
+
+            }
+
+        } else {
+            // Token tidak ada, tampilkan alert untuk login
+            android.app.AlertDialog.Builder(this)
+                .setTitle("Anda belum login")
+                .setMessage("Segera login untuk mengupload gambar.")
+                .setPositiveButton("Login") { _, _ ->
+                    // Arahkan ke halaman login
+                    startActivity(Intent(this, LoginActivity::class.java))
+                }
+                .setNegativeButton("Batal", null) // Tombol Cancel, tidak melakukan apa-apa
+                .show()
+        }
+    }
+
+    private fun showImageSourceDialog() {
+        val options = arrayOf("Kamera", "Galeri")
+        android.app.AlertDialog.Builder(this)
+            .setTitle("Pilih sumber foto")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> openCamera() // Pilih kamera
+                    1 -> openGallery() // Pilih galeri
+                }
+            }
+            .show()
+    }
+
+
+    private fun requestPermissionsFile() {
+        val permissions = mutableListOf<String>()
+
+        // Memeriksa versi Android dan menambahkan permission yang sesuai
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Untuk Android 13 (API 33) dan lebih tinggi
+            permissions.add(Manifest.permission.READ_MEDIA_IMAGES) // Akses gambar dari galeri
+        } else {
+            // Untuk versi Android sebelum API 33
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE) // Akses penyimpanan eksternal
+        }
+
+        permissions.add(Manifest.permission.CAMERA) // Akses kamera
+
+        // Meluncurkan permission request
+
+        permissionLauncher.launch(permissions.toTypedArray())
+    }
+
+    // Fungsi yang dipanggil saat meminta izin
+    private val permissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val cameraGranted = permissions[Manifest.permission.CAMERA] == true
+        val storageGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions[Manifest.permission.READ_MEDIA_IMAGES] == true
+        } else {
+            permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true
+        }
+
+        if (cameraGranted && storageGranted) {
+            // Jika izin kamera dan penyimpanan diberikan, tampilkan dialog memilih sumber gambar
+            showImageSourceDialog()
+
+        } else {
+            // Jika izin tidak diberikan, tampilkan Toast
+            Toast.makeText(this, "Izin kamera dan penyimpanan diperlukan", Toast.LENGTH_SHORT).show()
         }
     }
 
