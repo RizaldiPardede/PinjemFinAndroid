@@ -134,13 +134,15 @@
                             android:textColor="@color/pf_text_primary"
                             android:textSize="12sp"></TextView>
 
-                        <EditText
+                        <com.example.pinjemfinandroid.Utils.RupiahEditText
                             android:id="@+id/et_amount"
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
                             android:background="@drawable/reactangleinputext"
                             android:inputType="number"
-                            android:padding="5dp" />
+                            android:padding="5dp"
+                            android:hint="Rp 0"
+                            />
 
                         <TextView
                             android:layout_width="match_parent"

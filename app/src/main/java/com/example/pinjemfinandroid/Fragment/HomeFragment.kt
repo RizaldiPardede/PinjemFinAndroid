@@ -52,9 +52,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         ViewCompat.setZ(binding.shapeprofile, 1f)
         binding.btnSimulasi.backgroundTintList = null
         binding.btnSimulasi.setOnClickListener {
-            val amount = binding.etAmount.text.toString().toDoubleOrNull() ?: 0.0
-            val tenor = binding.etTenor.text.toString().toIntOrNull() ?: 0
-            viewModel.getSimulasiPengajuan(amount, tenor)
+            val amount = binding.etAmount.getCleanValue().toDouble()
+            val tenor = binding.etTenor.text.toString().toIntOrNull()
+            if (tenor != null) {
+                viewModel.getSimulasiPengajuan(amount, tenor)
+            }
         }
 
         // Observe hasil

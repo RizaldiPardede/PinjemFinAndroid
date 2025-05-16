@@ -1,14 +1,300 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.TransactionFragment">
+    tools:context=".Fragment.TransactionFragment"
+    android:background="@color/pf_primary"
+    >
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="this is transaction" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-</FrameLayout>
+        <!-- Contoh konten -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lakukan Pengajuan"
+            android:textSize="25sp"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/poppins_bold"
+            />
+
+        <LinearLayout
+            android:id="@+id/linearLayout_Card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:background="@drawable/card_default">
+
+
+            <TextView
+                android:id="@+id/tv_jumlahPlafon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="46dp"
+                android:layout_marginTop="90dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Default plafon"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <!-- Tambahkan konten lainnya di sini -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/base_shape2"
+            android:padding="10dp"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/pb_perentase"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="80%"
+                    android:fontFamily="@font/poppins_semibold"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=" For level Up"
+                    android:fontFamily="@font/poppins_semibold"
+                    />
+
+            </LinearLayout>
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:progress="0"
+                android:max="100"
+                android:progressTint="@color/pf_accent" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sisa Plafon"
+                android:textSize="14sp"
+                android:textColor="@color/pf_text_primary"
+                android:fontFamily="@font/poppins_bold"
+                />
+            <TextView
+                android:id="@+id/tv_sisaPlafon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="IDR 1.000.000.000"
+                android:textSize="14sp"
+                android:textColor="@color/pf_text_primary"
+                android:fontFamily="@font/poppins_semibold"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Jumlah pinjaman Lunas"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:textColor="@color/pf_text_primary"
+                android:fontFamily="@font/poppins_bold"
+                />
+            <TextView
+                android:id="@+id/tv_pinjamanlunas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="IDR 1.000.000.000"
+                android:textSize="14sp"
+                android:textColor="@color/pf_text_primary"
+                android:fontFamily="@font/poppins_semibold"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Jumlah pinjaman Saat ini"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:textColor="@color/pf_text_primary"
+                android:fontFamily="@font/poppins_bold"
+                />
+            <TextView
+                android:id="@+id/tv_pinjamansekarang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="IDR 1.000.000.000"
+                android:textSize="14sp"
+                android:textColor="@color/pf_text_primary"
+                android:fontFamily="@font/poppins_semibold"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/base_shape2"
+            android:padding="10dp"
+            android:layout_marginTop="20dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Amount"
+                android:textColor="@color/pf_text_primary"
+                android:textSize="12sp"></TextView>
+
+            <EditText
+                android:id="@+id/et_amount"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/reactangleinputext"
+                android:inputType="number"
+                android:padding="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Tenor"
+                android:textColor="@color/pf_text_primary"
+                android:textSize="12sp">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/et_tenor"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/reactangleinputext"
+                android:inputType="number"
+                android:padding="5dp" />
+
+            <Button
+                android:id="@+id/btn_ajukan"
+                android:layout_width="wrap_content"
+                android:layout_height="37dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/shapebutton"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Ajukan"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+            <LinearLayout
+                android:id="@+id/linearLayout_kalkulasi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="Pinjaman"
+                    android:textColor="@color/pf_text_primary"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_pinjaman"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:paddingStart="10dp"
+                    android:text="IDR 000.000.000"
+                    android:textColor="@color/pf_text_primary"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="Angsuran"
+                    android:textColor="@color/pf_text_primary"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_angsuran"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:paddingStart="10dp"
+                    android:text="IDR 000.000.000"
+                    android:textColor="@color/pf_text_primary"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="Tenor"
+                    android:textColor="@color/pf_text_primary"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_tenor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:paddingStart="10dp"
+                    android:text="12 Bulan"
+                    android:textColor="@color/pf_text_primary"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="Total Payment"
+                    android:textColor="@color/pf_text_primary"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp">
+
+                    <TextView
+                        android:id="@+id/tv_totalPayment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="IDR 000.000.000"
+                        android:textColor="@color/pf_text_primary"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_bunga"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:fontFamily="@font/poppins_medium"
+                        android:paddingStart="10dp"
+                        android:text="00%"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/pf_text_primary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

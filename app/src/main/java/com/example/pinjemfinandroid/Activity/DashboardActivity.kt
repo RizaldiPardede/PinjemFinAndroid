@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
+import com.example.pinjemfinandroid.Adapter.ViewPagerAdapter
 import com.example.pinjemfinandroid.databinding.ActivityDashboardBinding
 import com.example.pinjemfinandroid.Fragment.HomeFragment
 import com.example.pinjemfinandroid.Fragment.ProfileFragment
@@ -37,31 +39,11 @@ class DashboardActivity : AppCompatActivity() {
 
 
     private fun navbar() {
-//        setSelectedNav(binding.navHome)
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.fragment_container, HomeFragment())
-//            .commit()
-//
-//        binding.navHome.setOnClickListener {
-//            setSelectedNav(binding.navHome)
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.fragment_container, HomeFragment())
-//                .commit()
-//
-//        }
-//        binding.navProfile.setOnClickListener {
-//            setSelectedNav(binding.navProfile)
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.fragment_container, ProfileFragment())
-//                .commit()
-//
-//        }
-//        binding.navTransaction.setOnClickListener {
-//            setSelectedNav(binding.navTransaction)
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.fragment_container, TransactionFragment())
-//                .commit()
-//        }
+
+        val adapter = ViewPagerAdapter(this)
+        binding.fragmentContainer.adapter = adapter
+        binding.fragmentContainer.isUserInputEnabled = true // aktifkan swipe
+        binding.fragmentContainer.offscreenPageLimit = 3
 
         binding.bottomNavigation.add(NafisBottomNavigation.Model(1, R.drawable.baseline_home_white))
         binding.bottomNavigation.add(NafisBottomNavigation.Model(2, R.drawable.baseline_account_circle_white))
@@ -70,29 +52,27 @@ class DashboardActivity : AppCompatActivity() {
         binding.bottomNavigation.show(1)
 
         binding.bottomNavigation.setOnShowListener {
-            when (it.id) {
-                1 -> openFragment(HomeFragment())
-                2 -> openFragment(ProfileFragment())
-                3 -> openFragment(TransactionFragment())
+
+            val index = when (it.id) {
+                1 -> 0
+                2 -> 1
+                3 -> 2
+                else -> 0
             }
+            binding.fragmentContainer.setCurrentItem(index, true)
         }
 
+        binding.fragmentContainer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                binding.bottomNavigation.show(position + 1)
+            }
+        })
+
     }
 
-//    private fun setSelectedNav(selected: ImageView) {
-//        val navItems = listOf(
-//            binding.navHome,
-//            binding.navTransaction,
-//            binding.navProfile
-//        )
-//        navItems.forEach { it.isSelected = (it == selected) }
-//    }
 
-    private fun openFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
-    }
+
+
     private fun requestpermissionNotification(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
