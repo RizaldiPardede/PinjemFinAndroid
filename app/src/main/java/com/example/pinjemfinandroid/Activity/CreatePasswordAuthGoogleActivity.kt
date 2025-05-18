@@ -1,34 +1,35 @@
 package com.example.pinjemfinandroid.Activity
 
-
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.example.pinjemfinandroid.Animation.Animation
+import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.ViewModel.AuthViewModel
-import com.example.pinjemfinandroid.databinding.ActivityRegisterBinding
+import com.example.pinjemfinandroid.databinding.ActivityCreatePasswordAuthGoogleBinding
+import com.example.pinjemfinandroid.databinding.ActivityDashboardBinding
 
 
-class RegisterActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityRegisterBinding
-
+class CreatePasswordAuthGoogleActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityCreatePasswordAuthGoogleBinding
     private val authViewModel: AuthViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        binding = ActivityCreatePasswordAuthGoogleBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.buttonsignup.backgroundTintList= null
         animation()
+
         // Observasi hasil pendaftaran
-        authViewModel.registerResult.observe(this) { tokenResponse ->
+        authViewModel.registerAuthGoogleResult.observe(this) { tokenResponse ->
             tokenResponse?.let {
                 Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show()
             }
+
+            binding
         }
 
-        authViewModel.registerError.observe(this) { errorMessage ->
+        authViewModel.registerAuthGoogleError.observe(this) { errorMessage ->
             // Ketika gagal
             errorMessage?.let {
                 Toast.makeText(this, "Registration Failed: $it", Toast.LENGTH_SHORT).show()
@@ -36,7 +37,11 @@ class RegisterActivity : AppCompatActivity() {
         }
         binding.buttonsignup.setOnClickListener {
             if (binding.etPassword.text.toString().equals(binding.etConfirmPassword.text.toString())){
-                register(binding.etEmail.text.toString(),binding.etPassword.text.toString(),binding.etUsername.text.toString())
+                intent.getStringExtra("firebaseEmail")?.let { it1 ->
+                    authViewModel.PostRegisterUserAuthGoogle(
+                        it1,binding.etPassword.text.toString(), intent.getStringExtra("firebaseUsername")!!
+                    )
+                }
             }
             else{
                 Toast.makeText(this, "password and confirm password are different", Toast.LENGTH_SHORT).show()
@@ -44,11 +49,6 @@ class RegisterActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-    private fun register(username: String, password: String, nama: String){
-
-        authViewModel.PostRegisterUser(username, password, nama)
 
     }
 

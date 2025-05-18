@@ -13,7 +13,20 @@
           "package_name": "com.example.pinjemfinandroid"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "606282342688-4s33ug4vsji26p6uoo3qkknjn2fj0k7d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pinjemfinandroid",
+            "certificate_hash": "518507a02611a825c105a1feffe5ced4ce255653"
+          }
+        },
+        {
+          "client_id": "606282342688-r1qgjtjldtftdreip9d52k82hctjln10.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA4mNtYxA5J-zZIvEKTod7F9zP0HMmAmv8"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606282342688-r1qgjtjldtftdreip9d52k82hctjln10.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
