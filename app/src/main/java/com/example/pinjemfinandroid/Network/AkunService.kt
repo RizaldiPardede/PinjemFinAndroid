@@ -1,4 +1,4 @@
-package com.example.pinjemfinandroid.Api
+package com.example.pinjemfinandroid.Network
 
 import com.example.pinjemfinandroid.Model.DetailCustomerRequest
 import com.example.pinjemfinandroid.Model.DetailCustomerResponse

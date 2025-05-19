@@ -1,4 +1,4 @@
-package com.example.pinjemfinandroid.Api
+package com.example.pinjemfinandroid.Network
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -11,7 +11,6 @@ import androidx.core.app.NotificationCompat
 import com.example.pinjemfinandroid.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.google.firebase.messaging.remoteMessage
 
 class MyFirebaseMessagingService: FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {

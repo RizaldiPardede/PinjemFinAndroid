@@ -3,12 +3,9 @@ package com.example.pinjemfinandroid.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.pinjemfinandroid.Api.ApiConfig
+import com.example.pinjemfinandroid.Network.ApiConfig
 import com.example.pinjemfinandroid.Model.DetailCustomerRequest
 import com.example.pinjemfinandroid.Model.DetailCustomerResponse
-import com.example.pinjemfinandroid.Model.RegisterRequest
-import com.example.pinjemfinandroid.Model.TokenResponse
-import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,7 +21,7 @@ class AccountViewModel : ViewModel() {
 
 
 
-    fun addDetailAccount(detailcustomer: DetailCustomerRequest,token:String) {
+    fun addDetailAccount(detailcustomer: DetailCustomerRequest, token:String) {
 
         val call = ApiConfig.getAkunService(token).addDetailAccount(detailcustomer)
         call.enqueue(object : Callback<DetailCustomerResponse> {

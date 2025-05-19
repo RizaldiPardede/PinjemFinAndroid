@@ -30,7 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PinjemFinAndroid"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:name=".MyApplication"
+        >
         <activity
             android:name=".Activity.VerifikasiEmailActivity"
             android:exported="true" >
@@ -61,7 +63,7 @@
         </provider>
 
         <service
-            android:name=".Api.MyFirebaseMessagingService"
+            android:name=".Network.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

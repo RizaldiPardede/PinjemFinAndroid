@@ -48,7 +48,7 @@ class DashboardActivity : AppCompatActivity() {
         binding.bottomNavigation.add(NafisBottomNavigation.Model(1, R.drawable.baseline_home_white))
         binding.bottomNavigation.add(NafisBottomNavigation.Model(2, R.drawable.baseline_account_circle_white))
         binding.bottomNavigation.add(NafisBottomNavigation.Model(3, R.drawable.baseline_account_balance_wallet))
-
+        binding.bottomNavigation.add(NafisBottomNavigation.Model(4, R.drawable.baseline_receipt_24))
         binding.bottomNavigation.show(1)
 
         binding.bottomNavigation.setOnShowListener {
@@ -57,6 +57,7 @@ class DashboardActivity : AppCompatActivity() {
                 1 -> 0
                 2 -> 1
                 3 -> 2
+                4 -> 3
                 else -> 0
             }
             binding.fragmentContainer.setCurrentItem(index, true)

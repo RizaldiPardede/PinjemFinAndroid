@@ -145,6 +145,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
         })
         observeUploadResult()
 
+        binding.btnLogoutAccount.setOnClickListener {
+            preferenceHelper.clear()
+            startActivity(Intent(requireContext(),LoginActivity::class.java))
+        }
+
     }
 
 

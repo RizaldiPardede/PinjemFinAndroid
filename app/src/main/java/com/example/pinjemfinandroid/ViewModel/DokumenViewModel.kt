@@ -7,7 +7,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.pinjemfinandroid.Api.ApiConfig
+import com.example.pinjemfinandroid.Network.ApiConfig
 import com.example.pinjemfinandroid.Model.GetProfileResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

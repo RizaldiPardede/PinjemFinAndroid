@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="5dp"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/base_shape2"
+    >
+
+    <TextView
+        android:id="@+id/tv_pinjaman"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rp 2.000.000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/pf_text_primary"
+        />
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:text="Status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textColor="@color/pf_text_primary"/>
+
+    <TextView
+        android:id="@+id/tv_tenor"
+        android:text="12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/pf_text_primary"/>
+</LinearLayout>

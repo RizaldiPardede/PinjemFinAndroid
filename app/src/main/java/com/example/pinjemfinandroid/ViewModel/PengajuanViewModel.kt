@@ -1,16 +1,14 @@
 package com.example.pinjemfinandroid.ViewModel
 
+import PengajuanResponseItem
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.pinjemfinandroid.Api.ApiConfig
-import com.example.pinjemfinandroid.Model.DetailCustomerRequest
-import com.example.pinjemfinandroid.Model.DetailCustomerResponse
+import com.example.pinjemfinandroid.Network.ApiConfig
 import com.example.pinjemfinandroid.Model.InformasiPengajuanResponse
 import com.example.pinjemfinandroid.Model.MessageResponse
 import com.example.pinjemfinandroid.Model.PengajuanRequest
 import com.example.pinjemfinandroid.Model.PengajuanResponse
-import com.example.pinjemfinandroid.Model.SimulasiResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,6 +32,12 @@ class PengajuanViewModel: ViewModel() {
     private val _informasiPengajuanError = MutableLiveData<String>()
     val informasiPengajuanError: LiveData<String> = _informasiPengajuanError
 
+
+    private val _ListpengajuanResult = MutableLiveData<List<PengajuanResponseItem>>()
+    val ListpengajuanResult: LiveData<List<PengajuanResponseItem>> = _ListpengajuanResult
+
+    private val _ListpengajuanError = MutableLiveData<String>()
+    val ListpengajuanError: LiveData<String> = _ListpengajuanError
     fun postPengajuan(pengajuanRequest: PengajuanRequest, token:String) {
 
         val call = ApiConfig.getPengajuanService(token).postPengajuan(pengajuanRequest)
@@ -96,6 +100,29 @@ class PengajuanViewModel: ViewModel() {
             override fun onFailure(call: Call<InformasiPengajuanResponse>, t: Throwable) {
 
                 _informasiPengajuanError.value = "Kesalahan: ${t.message}"
+            }
+        })
+    }
+
+
+    fun getAllPengajuan(token:String) {
+
+        val call = ApiConfig.getPengajuanService(token).getAllPengajuan()
+        call.enqueue(object : Callback<List<PengajuanResponseItem>> {
+            override fun onResponse(
+                call: Call<List<PengajuanResponseItem>>,
+                response: Response<List<PengajuanResponseItem>>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    _ListpengajuanResult.value = response.body()!!
+                } else {
+                    _ListpengajuanError.value = "Register gagal: ${response.code()}"
+                }
+            }
+
+            override fun onFailure(call: Call<List<PengajuanResponseItem>>, t: Throwable) {
+
+                _ListpengajuanError.value = "Register error: ${t.message}"
             }
         })
     }

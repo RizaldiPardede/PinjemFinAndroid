@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pinjemfinandroid.Model.MenuModel
 import com.example.pinjemfinandroid.R
 
-class MenuAdapter(private val dataList: List<MenuModel>,private val listener: OnItemClickListener) :
+class MenuAdapter(private val dataList: List<MenuModel>, private val listener: OnItemClickListener) :
     RecyclerView.Adapter<MenuAdapter.ViewHolder>()  {
 
     interface OnItemClickListener {

@@ -1,6 +1,7 @@
 package com.example.pinjemfinandroid.Activity
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -25,6 +26,7 @@ class RegisterActivity : AppCompatActivity() {
         authViewModel.registerResult.observe(this) { tokenResponse ->
             tokenResponse?.let {
                 Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this,VerifikasiEmailActivity::class.java))
             }
         }
 

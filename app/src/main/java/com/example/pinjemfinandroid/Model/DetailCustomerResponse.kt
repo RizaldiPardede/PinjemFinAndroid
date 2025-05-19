@@ -1,20 +1,20 @@
 package com.example.pinjemfinandroid.Model
 
 data class DetailCustomerResponse(
-	val sisaPlafon: Any? = null,
-	val noRek: String? = null,
-	val gaji: String? = null,
-	val tempatTglLahir: String? = null,
-	val branch: Branch? = null,
-	val users: Users? = null,
-	val alamat: String? = null,
-	val statusRumah: String? = null,
-	val nik: String? = null,
-	val idUserCustomer: String? = null,
-	val pekerjaan: String? = null,
-	val namaIbuKandung: String? = null,
-	val noTelp: String? = null,
-	val plafon: Plafon? = null
+    val sisaPlafon: Any? = null,
+    val noRek: String? = null,
+    val gaji: String? = null,
+    val tempatTglLahir: String? = null,
+    val branch: Branch? = null,
+    val users: Users? = null,
+    val alamat: String? = null,
+    val statusRumah: String? = null,
+    val nik: String? = null,
+    val idUserCustomer: String? = null,
+    val pekerjaan: String? = null,
+    val namaIbuKandung: String? = null,
+    val noTelp: String? = null,
+    val plafon: Plafon? = null
 )
 
 data class Role(
@@ -30,11 +30,11 @@ data class Plafon(
 )
 
 data class Users(
-	val password: String? = null,
-	val role: Role? = null,
-	val nama: String? = null,
-	val idUser: String? = null,
-	val email: String? = null
+    val password: String? = null,
+    val role: Role? = null,
+    val nama: String? = null,
+    val idUser: String? = null,
+    val email: String? = null
 )
 
 data class Branch(

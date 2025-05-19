@@ -1,6 +1,5 @@
 package com.example.pinjemfinandroid.Fragment
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,9 +15,7 @@ import com.example.pinjemfinandroid.Model.PengajuanRequest
 import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.ConfirmationUtilsFlexible
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
-import com.example.pinjemfinandroid.ViewModel.DokumenViewModel
 import com.example.pinjemfinandroid.ViewModel.PengajuanViewModel
-import com.example.pinjemfinandroid.databinding.FragmentProfileBinding
 import com.example.pinjemfinandroid.databinding.FragmentTransactionBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -82,7 +79,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
                 )
             }
             else{
-                val pengajuan =PengajuanRequest(binding.etAmount.text.toString().toDouble(),binding.etTenor.text.toString().toInt())
+                val pengajuan = PengajuanRequest(binding.etAmount.text.toString().toDouble(),binding.etTenor.text.toString().toInt())
                 preferenceHelper.getString("token")?.let {
                     pengajuanViewModel.cekUpdateAkun(it)
 
@@ -99,7 +96,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
 
     }
 
-    fun observeCekUpdateResult(pengajuan:PengajuanRequest){
+    fun observeCekUpdateResult(pengajuan: PengajuanRequest){
 
         pengajuanViewModel.cekUpdate.observe(viewLifecycleOwner, Observer {messageresponse->
             preferenceHelper.getString("token")?.let {

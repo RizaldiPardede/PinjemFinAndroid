@@ -21,7 +21,7 @@ class VerifikasiEmailActivity : AppCompatActivity() {
 
         val data: Uri? = intent?.data
         val token = data?.getQueryParameter("token")
-
+        animation()
         if (token != null) {
             authViewModel.PostEmailActivation(token)
 

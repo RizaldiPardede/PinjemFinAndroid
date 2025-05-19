@@ -3,14 +3,16 @@ package com.example.pinjemfinandroid.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.pinjemfinandroid.Api.ApiConfig
+import com.example.pinjemfinandroid.Network.ApiConfig
 import com.example.pinjemfinandroid.Model.EmailActivationRequest
 import com.example.pinjemfinandroid.Model.EmailCekRequest
 import com.example.pinjemfinandroid.Model.LoginGoogleRequest
 import com.example.pinjemfinandroid.Model.LoginRequest
 import com.example.pinjemfinandroid.Model.MessageResponse
+import com.example.pinjemfinandroid.Model.ProfileResponse
 import com.example.pinjemfinandroid.Model.RegisterRequest
 import com.example.pinjemfinandroid.Model.TokenResponse
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -53,6 +55,12 @@ class AuthViewModel: ViewModel() {
 
     private val _emailActivationError = MutableLiveData<String>()
     val emailActivationError: LiveData<String> = _emailActivationError
+
+    private val _profileResult = MutableLiveData<ProfileResponse>()
+    val profileResult: LiveData<ProfileResponse> = _profileResult
+
+    private val _profileError = MutableLiveData<String>()
+    val profileError: LiveData<String> = _profileError
     fun PostRegisterUser(username: String, password: String, nama: String) {
         val request = RegisterRequest(password,nama,username)
         val call = ApiConfig.getApiService().Register(request)
@@ -86,6 +94,7 @@ class AuthViewModel: ViewModel() {
                 if (response.isSuccessful && response.body() != null) {
                     _registerAuthGoogleResult.value = response.body()!!
                 } else {
+
                     _registerAuthGoogleError.value = "Register gagal: ${response.code()}"
                 }
             }
@@ -108,13 +117,23 @@ class AuthViewModel: ViewModel() {
                 if (response.isSuccessful && response.body() != null) {
                     _loginResult.value = response.body()!!
                 } else {
-                    _loginError.value = "Register gagal: ${response.code()}"
+                    val errorBodyString = response.errorBody()?.string()
+                    if (!errorBodyString.isNullOrEmpty()) {
+                        try {
+                            val errorResponse = Gson().fromJson(errorBodyString, MessageResponse::class.java)
+                            _loginError.value = errorResponse?.message ?: "Terjadi kesalahan tidak diketahui"
+                        } catch (e: Exception) {
+                            _loginError.value = "Login gagal: $errorBodyString"
+                        }
+                    } else {
+                        _loginError.value = "Login gagal: Response error kosong"
+                    }
                 }
             }
 
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
 
-                _loginError.value = "Register error: ${t.message}"
+                _loginError.value = "Login error: ${t.message}"
             }
         })
     }
@@ -152,7 +171,17 @@ class AuthViewModel: ViewModel() {
                 if (response.isSuccessful && response.body() != null) {
                     _loginGoogleResult.value = response.body()!!
                 } else {
-                    _loginGoogleError.value = "login gagal: ${response.code()}"
+                    val errorBodyString = response.errorBody()?.string()
+                    if (!errorBodyString.isNullOrEmpty()) {
+                        try {
+                            val errorResponse = Gson().fromJson(errorBodyString, MessageResponse::class.java)
+                            _loginError.value = errorResponse?.message ?: "Terjadi kesalahan tidak diketahui"
+                        } catch (e: Exception) {
+                            _loginError.value = "Login gagal: $errorBodyString"
+                        }
+                    } else {
+                        _loginError.value = "Login gagal: Response error kosong"
+                    }
                 }
             }
 
@@ -181,6 +210,39 @@ class AuthViewModel: ViewModel() {
             override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
 
                 _emailActivationError.value = "Aktifasi error: ${t.message}"
+            }
+        })
+    }
+
+
+
+    fun getProfile(token:String){
+        val call = ApiConfig.getApiService(token).getProfile()
+        call.enqueue(object : Callback<ProfileResponse> {
+            override fun onResponse(
+                call: Call<ProfileResponse>,
+                response: Response<ProfileResponse>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    _profileResult.value = response.body()!!
+                } else {
+                    val errorBodyString = response.errorBody()?.string()
+                    if (!errorBodyString.isNullOrEmpty()) {
+                        try {
+                            val errorResponse = Gson().fromJson(errorBodyString, MessageResponse::class.java)
+                            _profileError.value = errorResponse?.message ?: "Terjadi kesalahan tidak diketahui"
+                        } catch (e: Exception) {
+                            _profileError.value = "get profile gagal: $errorBodyString"
+                        }
+                    } else {
+                        _profileError.value = "get profile gagal: Response error kosong"
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
+
+                _profileError.value = "Login error: ${t.message}"
             }
         })
     }

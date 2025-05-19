@@ -3,11 +3,9 @@ package com.example.pinjemfinandroid.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.pinjemfinandroid.Api.ApiConfig
-import com.example.pinjemfinandroid.Model.RegisterRequest
+import com.example.pinjemfinandroid.Network.ApiConfig
 import com.example.pinjemfinandroid.Model.SimulasiRequest
 import com.example.pinjemfinandroid.Model.SimulasiResponse
-import com.example.pinjemfinandroid.Model.TokenResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

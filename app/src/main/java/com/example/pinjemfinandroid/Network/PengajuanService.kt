@@ -1,5 +1,6 @@
-package com.example.pinjemfinandroid.Api
+package com.example.pinjemfinandroid.Network
 
+import PengajuanResponseItem
 import com.example.pinjemfinandroid.Model.MessageResponse
 import com.example.pinjemfinandroid.Model.PengajuanRequest
 import com.example.pinjemfinandroid.Model.PengajuanResponse
@@ -7,6 +8,7 @@ import com.example.pinjemfinandroid.Model.SimulasiRequest
 import com.example.pinjemfinandroid.Model.SimulasiResponse
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface PengajuanService {
@@ -18,4 +20,7 @@ interface PengajuanService {
 
     @POST("customer/CekUpdateAkun")
     fun cekUpdateAkun(): Call<MessageResponse>
+
+    @GET("pengajuan/getAllPengajuan")
+    fun getAllPengajuan(): Call<List<PengajuanResponseItem>>
 }
