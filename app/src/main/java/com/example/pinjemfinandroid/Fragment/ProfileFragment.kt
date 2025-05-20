@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,12 +25,16 @@ import com.bumptech.glide.Glide
 import com.example.pinjemfinandroid.Activity.AddDetailActivity
 import com.example.pinjemfinandroid.Activity.LoginActivity
 import com.example.pinjemfinandroid.Adapter.MenuAdapter
+import com.example.pinjemfinandroid.Local.UserRoomViewModel
 import com.example.pinjemfinandroid.Model.MenuModel
 import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.ConfirmationUtils.showConfirmationDialog
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.ViewModel.DokumenViewModel
+import com.example.pinjemfinandroid.ViewModel.TokenNotifViewModel
 import com.example.pinjemfinandroid.databinding.FragmentProfileBinding
+import com.google.firebase.messaging.FirebaseMessaging
+import dagger.hilt.android.AndroidEntryPoint
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,6 +46,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ProfileFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemClickListener {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -51,10 +57,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
     private lateinit var adapter: MenuAdapter
     private lateinit var preferenceHelper: PreferenceHelper
     private lateinit var dataList: List<MenuModel>
-
+    private val userRoomViewModel: UserRoomViewModel by viewModels()
     private var photoUri: Uri? = null
     private lateinit var uploadImageViewModel: DokumenViewModel
-
+    private lateinit var tokenNotifViewModel: TokenNotifViewModel
     private val cameraLauncher =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
@@ -119,7 +125,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         uploadImageViewModel = ViewModelProvider(this).get(DokumenViewModel::class.java)
-
+        tokenNotifViewModel = ViewModelProvider(this).get(TokenNotifViewModel::class.java)
         dataList = listOf(
             MenuModel("Profile Information", "Manage account details", R.drawable.baseline_account_circle_white),
             MenuModel("Plafon Information", "See Your Plafon here", R.drawable.baseline_credit_card_24),
@@ -146,8 +152,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
         observeUploadResult()
 
         binding.btnLogoutAccount.setOnClickListener {
-            preferenceHelper.clear()
-            startActivity(Intent(requireContext(),LoginActivity::class.java))
+            cleanTokenNotifFromAkun()
+
         }
 
     }
@@ -309,6 +315,33 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
         } else {
             binding.progressBar.visibility = View.GONE  // Menyembunyikan ProgressBar
             Log.d("ProfileFragment", "Progress bar disembunyikan")
+        }
+    }
+
+
+    private fun cleanTokenNotifFromAkun(){
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                    return@addOnCompleteListener
+                }
+
+                val token = task.result
+                preferenceHelper.getString("token")
+                    ?.let { tokenNotifViewModel.postCleanTokenNotif(token, it) }
+
+            }
+
+        tokenNotifViewModel.cleanTokenResult.observe(viewLifecycleOwner){
+            it.message?.let { it1 -> Log.d("Token Notifikasi", it1) }
+            preferenceHelper.clear()
+            userRoomViewModel.clearUsers()
+            startActivity(Intent(requireContext(),LoginActivity::class.java))
+        }
+
+        tokenNotifViewModel.cleanTokenError.observe(viewLifecycleOwner){
+            it.let { it1 -> Log.d("Token Notifikasi", it1) }
         }
     }
 

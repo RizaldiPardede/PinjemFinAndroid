@@ -177,11 +177,9 @@ class LoginActivity : AppCompatActivity() {
     private fun observeloginGoogle(email: String,username:String){
 
         authViewModel.loginGoogleResult.observe(this){
-            val intent = Intent(this, DashboardActivity::class.java)
+
             it.token?.let { it1 -> preferenceHelper.setString("token", it1) }
-            preferenceHelper.setString("email", email)
-            preferenceHelper.setString("username", username)
-            startActivity(intent)
+            it.token?.let { it1 -> authViewModel.getProfile(it1) }
         }
 
         authViewModel.loginGoogleError.observe(this){
@@ -202,11 +200,14 @@ class LoginActivity : AppCompatActivity() {
 
                     // Insert ke database Room (jalan di background thread)
                     lifecycleScope.launch {
-                        userDataDao.insertUser(entity)
-                        Log.d("RoomInsert", "Data berhasil dimasukkan ke Room: ${entity.nama}")
-                        Toast.makeText(this@LoginActivity,"Data berhasil dimasukkan ke Room: ${entity.nama}",Toast.LENGTH_SHORT).show()
+                        if (entity != null) {
+                            userDataDao.insertUser(entity)
+                            Log.d("RoomInsert", "Data berhasil dimasukkan ke Room: ${entity.nama}")
+                            startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
+                        }
 
-                        startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
+
+
                     }
                 } else {
                     // Data kosong, tidak insert ke Room
@@ -214,37 +215,41 @@ class LoginActivity : AppCompatActivity() {
                 }
             } else {
                 // Response null, skip insert
+                startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
                 Log.d("RoomInsert", "ProfileResponse is null, skip insert")
             }
         }
         authViewModel.profileError.observe(this){
+            startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
             Log.e("ProfileError", "Error getting profile: $it")
         }
     }
 
-    fun mapProfileResponseToEntity(response:ProfileResponse): UserData{
-        return UserData(
-            // id auto generate, jangan diisi di sini
-            nama = response.users?.nama,
-            email = response.users?.email,
-            nama_role = response.users?.role?.namaRole,
-            tempat_tgl_lahir = response.tempatTglLahir,
-            no_telp = response.noTelp,
-            alamat = response.alamat,
-            nik = response.nik,
-            nama_ibu_kandung = response.namaIbuKandung,
-            pekerjaan = response.pekerjaan,
-            gaji = response.gaji,
-            no_rek = response.noRek,
-            status_rumah = response.statusRumah,
-            jenis_plafon = response.plafon?.jenisPlafon,
-            jumlah_plafon = (response.plafon?.jumlahPlafon as? Double) ?: (response.plafon?.jumlahPlafon as? Float)?.toDouble(),
-            bunga = (response.plafon?.bunga as? Double) ?: (response.plafon?.bunga as? Float)?.toDouble(),
-            nama_branch = response.branch?.namaBranch,
-            alamat_branch = response.branch?.alamatBranch,
-            latitude_branch = (response.branch?.latitudeBranch as? Double) ?: (response.branch?.latitudeBranch as? Float)?.toDouble(),
-            longitude_branch = (response.branch?.longitudeBranch as? Double) ?: (response.branch?.longitudeBranch as? Float)?.toDouble(),
-            sisa_plafon = (response.sisaPlafon as? Double) ?: (response.sisaPlafon as? Float)?.toDouble()
-        )
+    fun mapProfileResponseToEntity(response:ProfileResponse): UserData? {
+        return response.users?.email?.let {
+            UserData(
+                // id auto generate, jangan diisi di sini
+                nama = response.users?.nama,
+                email = it,
+                nama_role = response.users?.role?.namaRole,
+                tempat_tgl_lahir = response.tempatTglLahir,
+                no_telp = response.noTelp,
+                alamat = response.alamat,
+                nik = response.nik,
+                nama_ibu_kandung = response.namaIbuKandung,
+                pekerjaan = response.pekerjaan,
+                gaji = response.gaji,
+                no_rek = response.noRek,
+                status_rumah = response.statusRumah,
+                jenis_plafon = response.plafon?.jenisPlafon,
+                jumlah_plafon = (response.plafon?.jumlahPlafon as? Double) ?: (response.plafon?.jumlahPlafon as? Float)?.toDouble(),
+                bunga = (response.plafon?.bunga as? Double) ?: (response.plafon?.bunga as? Float)?.toDouble(),
+                nama_branch = response.branch?.namaBranch,
+                alamat_branch = response.branch?.alamatBranch,
+                latitude_branch = (response.branch?.latitudeBranch as? Double) ?: (response.branch?.latitudeBranch as? Float)?.toDouble(),
+                longitude_branch = (response.branch?.longitudeBranch as? Double) ?: (response.branch?.longitudeBranch as? Float)?.toDouble(),
+                sisa_plafon = (response.sisaPlafon as? Double) ?: (response.sisaPlafon as? Float)?.toDouble()
+            )
+        }
     }
 }

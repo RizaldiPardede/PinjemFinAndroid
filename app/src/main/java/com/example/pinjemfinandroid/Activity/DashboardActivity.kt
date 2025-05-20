@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -18,22 +19,49 @@ import com.example.pinjemfinandroid.Fragment.ProfileFragment
 import com.example.pinjemfinandroid.Fragment.TransactionFragment
 import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
+import com.example.pinjemfinandroid.ViewModel.TokenNotifViewModel
+import com.google.firebase.messaging.FirebaseMessaging
 import com.nafis.bottomnavigation.NafisBottomNavigation
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDashboardBinding
     private lateinit var preferenceHelper: PreferenceHelper
+    private val tokenNotifViewModel:TokenNotifViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         requestpermissionNotification()
         navbar()
         preferenceHelper = PreferenceHelper(this)
 
 
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                    return@addOnCompleteListener
+                }
 
+                val token = task.result
+                preferenceHelper.getString("token")
+                    ?.let { tokenNotifViewModel.postAddTokenNotif(token, it)
+                        Log.d("DEBUG_TOKEN", "token = $token, userToken = $it")
+                    }
+
+            }
+
+        tokenNotifViewModel.addTokenResult.observe(this){
+            it.message?.let { it1 -> Log.d("Token Notifikasi", it1) }
+        }
+
+        tokenNotifViewModel.addTokenError.observe(this){
+            it.let { it1 -> Log.d("Token Notifikasi", it1) }
+        }
 
     }
 

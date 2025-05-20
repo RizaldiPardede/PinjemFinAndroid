@@ -35,4 +35,6 @@ object ApiConfig {
     fun getAkunService(token: String? = null): AkunService = provideRetrofit(token).create(AkunService::class.java)
 
     fun uploadDokumenservice(token: String? = null): DokumenService = provideRetrofit(token).create(DokumenService::class.java)
+
+    fun gettokenNotifikasiservice(token: String? = null): TokenNotificationService = provideRetrofit(token).create(TokenNotificationService::class.java)
 }
