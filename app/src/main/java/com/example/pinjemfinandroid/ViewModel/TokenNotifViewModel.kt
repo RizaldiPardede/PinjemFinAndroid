@@ -26,9 +26,12 @@ class TokenNotifViewModel: ViewModel() {
     private val _cleanTokenError = MutableLiveData<String>()
     val cleanTokenError: LiveData<String> = _cleanTokenError
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
     fun postAddTokenNotif(tokenNotif:String, token:String) {
         val request = TokenNotifRequest(tokenNotif)
         val call = ApiConfig.gettokenNotifikasiservice(token).addTokenNotif(request)
+        _isLoading.value = true
         call.enqueue(object : Callback<MessageResponse> {
             override fun onResponse(
                 call: Call<MessageResponse>,
@@ -39,11 +42,13 @@ class TokenNotifViewModel: ViewModel() {
                 } else {
                     _addTokenError.value = "Add token notif gagal: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
 
                 _addTokenError.value = "Add token notif error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }
@@ -51,6 +56,7 @@ class TokenNotifViewModel: ViewModel() {
     fun postCleanTokenNotif(tokenNotif:String, token:String) {
         val request = TokenNotifRequest(tokenNotif)
         val call = ApiConfig.gettokenNotifikasiservice(token).clearUserCustomerNotifikasi(request)
+        _isLoading.value = true
         call.enqueue(object : Callback<MessageResponse> {
             override fun onResponse(
                 call: Call<MessageResponse>,
@@ -61,11 +67,13 @@ class TokenNotifViewModel: ViewModel() {
                 } else {
                     _cleanTokenError.value = "Clean token notif gagal: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
 
                 _cleanTokenError.value = "Clean token notif error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }

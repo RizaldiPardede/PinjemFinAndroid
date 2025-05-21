@@ -23,6 +23,7 @@ import com.example.pinjemfinandroid.Model.DetailCustomerRequest
 import com.example.pinjemfinandroid.Model.ProfileResponse
 import com.example.pinjemfinandroid.Utils.LocationHelper
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
+import com.example.pinjemfinandroid.Utils.combineLoading
 import com.example.pinjemfinandroid.ViewModel.AccountViewModel
 import com.example.pinjemfinandroid.ViewModel.AuthViewModel
 import com.example.pinjemfinandroid.ViewModel.DokumenViewModel
@@ -100,7 +101,9 @@ class AddDetailActivity : AppCompatActivity() {
         binding.buttonSubmit.backgroundTintList = null
         dokumenViewModel = ViewModelProvider(this).get(DokumenViewModel::class.java)
         showLocationPermissionDialog()
+        isLoading()
         userRoomViewModel.loadUsers()
+
         if (preferenceHelper.getString("token").isNullOrEmpty()){
 
             AlertDialog.Builder(this)
@@ -115,6 +118,7 @@ class AddDetailActivity : AppCompatActivity() {
                 .show()
         }
         else{
+            preferenceHelper.getString("token")?.let { authViewModel.getProfile(it) }
             binding.buttonSubmit.setOnClickListener {
                 var tempatTglLahir = binding.editTextTempatTglLahir.text.toString()
                 var noTelp = binding.editTextNoTelp.text.toString()
@@ -135,7 +139,7 @@ class AddDetailActivity : AppCompatActivity() {
                     preferenceHelper.getString("token")
                         ?.let { it1 ->
                             accountViewModel.addDetailAccount(customerRequest, it1)
-                            authViewModel.getProfile(it1)
+
                             Toast.makeText(this, "Data Customer berhasil dikirim", Toast.LENGTH_SHORT).show()
                         }
 
@@ -442,6 +446,23 @@ class AddDetailActivity : AppCompatActivity() {
                 longitude_branch = (response.branch?.longitudeBranch as? Double) ?: (response.branch?.longitudeBranch as? Float)?.toDouble(),
                 sisa_plafon = (response.sisaPlafon as? Double) ?: (response.sisaPlafon as? Float)?.toDouble()
             )
+        }
+    }
+
+    fun isLoading(){
+
+        val isLoading = combineLoading(
+            authViewModel.isLoading,accountViewModel.isLoading,dokumenViewModel.isLoading
+        )
+
+        isLoading.observe(this) { loading ->
+            if (loading) {
+                binding.loadingOverlay.visibility = View.VISIBLE
+                binding.lottieView.playAnimation()
+            } else {
+                binding.lottieView.cancelAnimation()
+                binding.loadingOverlay.visibility = View.GONE
+            }
         }
     }
 

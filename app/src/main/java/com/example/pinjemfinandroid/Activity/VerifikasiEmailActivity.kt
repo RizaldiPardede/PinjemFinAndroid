@@ -4,10 +4,12 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.pinjemfinandroid.Animation.Animation
 import com.example.pinjemfinandroid.R
+import com.example.pinjemfinandroid.Utils.combineLoading
 import com.example.pinjemfinandroid.ViewModel.AuthViewModel
 import com.example.pinjemfinandroid.databinding.ActivityVerifikasiEmailBinding
 
@@ -22,6 +24,7 @@ class VerifikasiEmailActivity : AppCompatActivity() {
         val data: Uri? = intent?.data
         val token = data?.getQueryParameter("token")
         animation()
+        isLoading()
         if (token != null) {
             authViewModel.PostEmailActivation(token)
 
@@ -52,5 +55,22 @@ class VerifikasiEmailActivity : AppCompatActivity() {
         myAnimation.animationslideright(binding.ivCirlce)
         myAnimation.animationslideleft(binding.ivCirlceline)
 
+    }
+
+    fun isLoading(){
+
+        val isLoading = combineLoading(
+            authViewModel.isLoading
+        )
+
+        isLoading.observe(this) { loading ->
+            if (loading) {
+                binding.loadingOverlay.visibility = View.VISIBLE
+                binding.lottieView.playAnimation()
+            } else {
+                binding.lottieView.cancelAnimation()
+                binding.loadingOverlay.visibility = View.GONE
+            }
+        }
     }
 }

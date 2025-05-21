@@ -6,12 +6,14 @@ import androidx.lifecycle.ViewModel
 import com.example.pinjemfinandroid.Network.ApiConfig
 import com.example.pinjemfinandroid.Model.EmailActivationRequest
 import com.example.pinjemfinandroid.Model.EmailCekRequest
+import com.example.pinjemfinandroid.Model.GetUserResponse
 import com.example.pinjemfinandroid.Model.LoginGoogleRequest
 import com.example.pinjemfinandroid.Model.LoginRequest
 import com.example.pinjemfinandroid.Model.MessageResponse
 import com.example.pinjemfinandroid.Model.ProfileResponse
 import com.example.pinjemfinandroid.Model.RegisterRequest
 import com.example.pinjemfinandroid.Model.TokenResponse
+import com.example.pinjemfinandroid.Model.UpdatePasswordRequest
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -61,9 +63,25 @@ class AuthViewModel: ViewModel() {
 
     private val _profileError = MutableLiveData<String>()
     val profileError: LiveData<String> = _profileError
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _getUserResult = MutableLiveData<GetUserResponse>()
+    val getUserResult: LiveData<GetUserResponse> = _getUserResult
+
+    private val _getUserError = MutableLiveData<String>()
+    val getUserError: LiveData<String> = _getUserError
+
+    private val _updateUserResult = MutableLiveData<MessageResponse>()
+    val updateUserResult: LiveData<MessageResponse> = _updateUserResult
+
+    private val _updateUserError = MutableLiveData<String>()
+    val updateUserError: LiveData<String> = _updateUserError
     fun PostRegisterUser(username: String, password: String, nama: String) {
         val request = RegisterRequest(password,nama,username)
         val call = ApiConfig.getApiService().Register(request)
+        _isLoading.value = true
         call.enqueue(object : Callback<TokenResponse> {
             override fun onResponse(
                 call: Call<TokenResponse>,
@@ -74,11 +92,13 @@ class AuthViewModel: ViewModel() {
                 } else {
                     _registerError.value = "Register gagal: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
 
                 _registerError.value = "Register error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }
@@ -86,6 +106,7 @@ class AuthViewModel: ViewModel() {
     fun PostRegisterUserAuthGoogle(username: String, password: String, nama: String) {
         val request = RegisterRequest(password,nama,username)
         val call = ApiConfig.getApiService().registerAuthGoogle(request)
+        _isLoading.value = true
         call.enqueue(object : Callback<TokenResponse> {
             override fun onResponse(
                 call: Call<TokenResponse>,
@@ -97,11 +118,13 @@ class AuthViewModel: ViewModel() {
 
                     _registerAuthGoogleError.value = "Register gagal: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
 
                 _registerAuthGoogleError.value = "Register error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }
@@ -109,6 +132,7 @@ class AuthViewModel: ViewModel() {
     fun PostLoginUser(username: String, password: String){
         val request = LoginRequest(password,username)
         val call = ApiConfig.getApiService().Login(request)
+        _isLoading.value = true
         call.enqueue(object : Callback<TokenResponse> {
             override fun onResponse(
                 call: Call<TokenResponse>,
@@ -116,6 +140,7 @@ class AuthViewModel: ViewModel() {
             ) {
                 if (response.isSuccessful && response.body() != null) {
                     _loginResult.value = response.body()!!
+                    _isLoading.value = false
                 } else {
                     val errorBodyString = response.errorBody()?.string()
                     if (!errorBodyString.isNullOrEmpty()) {
@@ -128,12 +153,14 @@ class AuthViewModel: ViewModel() {
                     } else {
                         _loginError.value = "Login gagal: Response error kosong"
                     }
+                    _isLoading.value = false
                 }
             }
 
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
 
                 _loginError.value = "Login error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }
@@ -141,6 +168,7 @@ class AuthViewModel: ViewModel() {
     fun PostCekEmail(email: String){
         val request = EmailCekRequest(email)
         val call = ApiConfig.getApiService().cekEmail(request)
+        _isLoading.value = true
         call.enqueue(object : Callback<MessageResponse> {
             override fun onResponse(
                 call: Call<MessageResponse>,
@@ -151,11 +179,13 @@ class AuthViewModel: ViewModel() {
                 } else {
                     _cekEmailError.value = "Register gagal: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
 
                 _cekEmailError.value = "Register error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }
@@ -163,6 +193,7 @@ class AuthViewModel: ViewModel() {
     fun PostLoginWithGoogleUser(firebaseIdToken:String){
         val request = LoginGoogleRequest(firebaseIdToken)
         val call = ApiConfig.getApiService().loginWithgoogle(request)
+        _isLoading.value = true
         call.enqueue(object : Callback<TokenResponse> {
             override fun onResponse(
                 call: Call<TokenResponse>,
@@ -183,11 +214,13 @@ class AuthViewModel: ViewModel() {
                         _loginError.value = "Login gagal: Response error kosong"
                     }
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
 
                 _loginGoogleError.value = "login error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }
@@ -195,6 +228,7 @@ class AuthViewModel: ViewModel() {
     fun PostEmailActivation(tokenActivation:String) {
         val request = EmailActivationRequest(tokenActivation)
         val call = ApiConfig.getApiService().emailActivation(request)
+        _isLoading.value = true
         call.enqueue(object : Callback<MessageResponse> {
             override fun onResponse(
                 call: Call<MessageResponse>,
@@ -205,11 +239,13 @@ class AuthViewModel: ViewModel() {
                 } else {
                     _emailActivationError.value = "Aktifasi gagal: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
 
                 _emailActivationError.value = "Aktifasi error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }
@@ -218,6 +254,7 @@ class AuthViewModel: ViewModel() {
 
     fun getProfile(token:String){
         val call = ApiConfig.getApiService(token).getProfile()
+        _isLoading.value = true
         call.enqueue(object : Callback<ProfileResponse> {
             override fun onResponse(
                 call: Call<ProfileResponse>,
@@ -238,11 +275,83 @@ class AuthViewModel: ViewModel() {
                         _profileError.value = "get profile gagal: Response error kosong"
                     }
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
 
                 _profileError.value = "Login error: ${t.message}"
+                _isLoading.value = false
+            }
+        })
+    }
+
+
+    fun getUser(token:String){
+        val call = ApiConfig.getApiService(token).getUser()
+        _isLoading.value = true
+        call.enqueue(object : Callback<GetUserResponse> {
+            override fun onResponse(
+                call: Call<GetUserResponse>,
+                response: Response<GetUserResponse>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    _getUserResult.value = response.body()!!
+                } else {
+                    val errorBodyString = response.errorBody()?.string()
+                    if (!errorBodyString.isNullOrEmpty()) {
+                        try {
+                            val errorResponse = Gson().fromJson(errorBodyString, MessageResponse::class.java)
+                            _getUserError.value = errorResponse?.message ?: "Terjadi kesalahan tidak diketahui"
+                        } catch (e: Exception) {
+                            _getUserError.value = "gagal: $errorBodyString"
+                        }
+                    } else {
+                        _getUserError.value = "gagal: Response error kosong"
+                    }
+                }
+                _isLoading.value = false
+            }
+
+            override fun onFailure(call: Call<GetUserResponse>, t: Throwable) {
+
+                _getUserError.value = "error: ${t.message}"
+                _isLoading.value = false
+            }
+        })
+    }
+
+    fun updatePassword(token:String,oldPassword:String,newPassword:String){
+        val request  = UpdatePasswordRequest(oldPassword,newPassword)
+        val call = ApiConfig.getApiService(token).updatepassword(request)
+        _isLoading.value = true
+        call.enqueue(object : Callback<MessageResponse> {
+            override fun onResponse(
+                call: Call<MessageResponse>,
+                response: Response<MessageResponse>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    _updateUserResult.value = response.body()!!
+                } else {
+                    val errorBodyString = response.errorBody()?.string()
+                    if (!errorBodyString.isNullOrEmpty()) {
+                        try {
+                            val errorResponse = Gson().fromJson(errorBodyString, MessageResponse::class.java)
+                            _updateUserError.value = errorResponse?.message ?: "Terjadi kesalahan tidak diketahui"
+                        } catch (e: Exception) {
+                            _updateUserError.value = "gagal: $errorBodyString"
+                        }
+                    } else {
+                        _updateUserError.value = "gagal: Response error kosong"
+                    }
+                }
+                _isLoading.value = false
+            }
+
+            override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
+
+                _updateUserError.value = "error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }

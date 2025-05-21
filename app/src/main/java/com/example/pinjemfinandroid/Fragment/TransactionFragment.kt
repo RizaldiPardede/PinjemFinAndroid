@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.pinjemfinandroid.Activity.LoginActivity
@@ -35,7 +36,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
     private var _binding: FragmentTransactionBinding? = null
     private lateinit var preferenceHelper: PreferenceHelper
     private val binding get() = _binding!!
-    private lateinit var pengajuanViewModel: PengajuanViewModel
+    private val pengajuanViewModel: PengajuanViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -60,7 +61,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        pengajuanViewModel = ViewModelProvider(this).get(PengajuanViewModel::class.java)
+//        pengajuanViewModel = ViewModelProvider(this).get(PengajuanViewModel::class.java)
         preferenceHelper.getString("token")?.let { statisticPinjaman(it) }
         binding.btnAjukan.setOnClickListener {
             if (preferenceHelper.getString("token").isNullOrEmpty()){

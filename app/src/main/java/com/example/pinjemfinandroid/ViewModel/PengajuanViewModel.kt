@@ -38,9 +38,13 @@ class PengajuanViewModel: ViewModel() {
 
     private val _ListpengajuanError = MutableLiveData<String>()
     val ListpengajuanError: LiveData<String> = _ListpengajuanError
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
     fun postPengajuan(pengajuanRequest: PengajuanRequest, token:String) {
 
         val call = ApiConfig.getPengajuanService(token).postPengajuan(pengajuanRequest)
+        _isLoading.value = true
         call.enqueue(object : Callback<PengajuanResponse> {
             override fun onResponse(
                 call: Call<PengajuanResponse>,
@@ -49,13 +53,15 @@ class PengajuanViewModel: ViewModel() {
                 if (response.isSuccessful && response.body() != null) {
                     _pengajuanResponse.value = response.body()!!
                 } else {
-                    _pengajuanError.value = "Register gagal: ${response.code()}"
+                    _pengajuanError.value = "Error: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<PengajuanResponse>, t: Throwable) {
 
-                _pengajuanError.value = "Register error: ${t.message}"
+                _pengajuanError.value = "error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }
@@ -63,6 +69,7 @@ class PengajuanViewModel: ViewModel() {
     fun cekUpdateAkun(token:String) {
 
         val call = ApiConfig.getPengajuanService(token).cekUpdateAkun()
+        _isLoading.value = true
         call.enqueue(object : Callback<MessageResponse> {
             override fun onResponse(
                 call: Call<MessageResponse>,
@@ -73,11 +80,13 @@ class PengajuanViewModel: ViewModel() {
                 } else {
                     _cekUpdateError.value = "Kesalahan: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
 
                 _cekUpdateError.value = "Kesalahan: ${t.message}"
+                _isLoading.value = false
             }
         })
     }
@@ -85,6 +94,7 @@ class PengajuanViewModel: ViewModel() {
     fun getInformasiPlafonCustomer(token:String) {
 
         val call = ApiConfig.getAkunService(token).getInformasiPlafonCustomer()
+        _isLoading.value = true
         call.enqueue(object : Callback<InformasiPengajuanResponse> {
             override fun onResponse(
                 call: Call<InformasiPengajuanResponse>,
@@ -95,11 +105,13 @@ class PengajuanViewModel: ViewModel() {
                 } else {
                     _informasiPengajuanError.value = "Kesalahan: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<InformasiPengajuanResponse>, t: Throwable) {
 
                 _informasiPengajuanError.value = "Kesalahan: ${t.message}"
+                _isLoading.value = false
             }
         })
     }
@@ -108,6 +120,7 @@ class PengajuanViewModel: ViewModel() {
     fun getAllPengajuan(token:String) {
 
         val call = ApiConfig.getPengajuanService(token).getAllPengajuan()
+        _isLoading.value = true
         call.enqueue(object : Callback<List<PengajuanResponseItem>> {
             override fun onResponse(
                 call: Call<List<PengajuanResponseItem>>,
@@ -118,11 +131,13 @@ class PengajuanViewModel: ViewModel() {
                 } else {
                     _ListpengajuanError.value = "Register gagal: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<List<PengajuanResponseItem>>, t: Throwable) {
 
                 _ListpengajuanError.value = "Register error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pinjemfinandroid.Adapter.PengajuanAdapter
@@ -33,7 +34,7 @@ class HistoryPengajuanFragment : Fragment(R.layout.fragment_history_pengajuan) {
     private var _binding: FragmentHistoryPengajuanBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: PengajuanAdapter
-    private lateinit var pengajuanViewModel: PengajuanViewModel
+    private val pengajuanViewModel: PengajuanViewModel by activityViewModels()
     private lateinit var preferenceHelper: PreferenceHelper
 
 
@@ -59,7 +60,7 @@ class HistoryPengajuanFragment : Fragment(R.layout.fragment_history_pengajuan) {
         binding.rvPengajuan.adapter = adapter
 
         preferenceHelper = PreferenceHelper(requireContext())
-        pengajuanViewModel = ViewModelProvider(this).get(PengajuanViewModel::class.java)
+
 
         val token = preferenceHelper.getString("token")
         Log.d("HISTORY_FRAGMENT", "Token: $token")

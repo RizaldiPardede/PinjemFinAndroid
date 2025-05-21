@@ -29,6 +29,12 @@ class DokumenViewModel:  ViewModel() {
     private val _profileImageUrl = MutableLiveData<String>()
     val profileImageUrl: LiveData<String> = _profileImageUrl
 
+    private val _profileImageError = MutableLiveData<String>()
+    val profileImageError: LiveData<String> = _profileImageError
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     fun uploadImage(context: Context, imageUri: Uri, imageType: String, token: String) {
         val realPath = getRealPathFromUri(context, imageUri)
         val file = File(realPath)
@@ -38,7 +44,7 @@ class DokumenViewModel:  ViewModel() {
         val imageTypeBody = RequestBody.create("text/plain".toMediaTypeOrNull(), imageType)
 
         val call = ApiConfig.uploadDokumenservice(token).uploadImage(imageTypeBody, multipartBody)
-
+        _isLoading.value = true
         call.enqueue(object : Callback<Map<String, String>> {
             override fun onResponse(call: Call<Map<String, String>>, response: Response<Map<String, String>>) {
                 if (response.isSuccessful) {
@@ -47,10 +53,12 @@ class DokumenViewModel:  ViewModel() {
                 } else {
                     _uploadError.value = "Upload gagal: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
                 _uploadError.value = "Terjadi kesalahan: ${t.message}"
+                _isLoading.value = false
             }
         })
 
@@ -69,20 +77,22 @@ class DokumenViewModel:  ViewModel() {
     // Fungsi untuk mendapatkan gambar profil
     fun getProfileImage(token: String) {
         val call = ApiConfig.uploadDokumenservice(token).getProfileImage()
-
+        _isLoading.value = true
         call.enqueue(object : Callback<GetProfileResponse> {
             override fun onResponse(call: Call<GetProfileResponse>, response: Response<GetProfileResponse>) {
                 if (response.isSuccessful) {
                     val imageUrl = response.body()?.imageProfile ?: ""
                     _profileImageUrl.value = imageUrl
                 } else {
-                    _uploadError.value = "Gagal mengambil gambar profil: ${response.code()}"
+                    _profileImageError.value = "Gagal mengambil gambar profil: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<GetProfileResponse>, t: Throwable) {
-                _uploadError.value = "Terjadi kesalahan: ${t.message}"
+                _profileImageError.value = "Terjadi kesalahan: ${t.message}"
                 Log.d("Terjadi kesalahan", "${t.message}")
+                _isLoading.value = false
             }
         })
     }

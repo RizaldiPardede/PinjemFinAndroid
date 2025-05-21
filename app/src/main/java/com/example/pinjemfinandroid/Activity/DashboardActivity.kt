@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -19,6 +20,10 @@ import com.example.pinjemfinandroid.Fragment.ProfileFragment
 import com.example.pinjemfinandroid.Fragment.TransactionFragment
 import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
+import com.example.pinjemfinandroid.Utils.combineLoading
+import com.example.pinjemfinandroid.ViewModel.DokumenViewModel
+import com.example.pinjemfinandroid.ViewModel.HomeViewModel
+import com.example.pinjemfinandroid.ViewModel.PengajuanViewModel
 import com.example.pinjemfinandroid.ViewModel.TokenNotifViewModel
 import com.google.firebase.messaging.FirebaseMessaging
 import com.nafis.bottomnavigation.NafisBottomNavigation
@@ -30,11 +35,15 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
     private lateinit var preferenceHelper: PreferenceHelper
     private val tokenNotifViewModel:TokenNotifViewModel by viewModels()
+    private val pengajuanViewModel: PengajuanViewModel by viewModels()
+    private val homeviewModel: HomeViewModel by viewModels()
+    private val uploadImageViewModel: DokumenViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        isLoading()
         requestpermissionNotification()
         navbar()
         preferenceHelper = PreferenceHelper(this)
@@ -127,6 +136,24 @@ class DashboardActivity : AppCompatActivity() {
                 Log.d("FCM", "Permission granted")
             } else {
                 Log.e("FCM", "Permission denied")
+            }
+        }
+    }
+
+    fun isLoading(){
+
+        val isLoading = combineLoading(
+            tokenNotifViewModel.isLoading,homeviewModel.isLoading
+            ,uploadImageViewModel.isLoading,pengajuanViewModel.isLoading
+        )
+
+        isLoading.observe(this) { loading ->
+            if (loading) {
+                binding.loadingOverlay.visibility = View.VISIBLE
+                binding.lottieView.playAnimation()
+            } else {
+                binding.lottieView.cancelAnimation()
+                binding.loadingOverlay.visibility = View.GONE
             }
         }
     }

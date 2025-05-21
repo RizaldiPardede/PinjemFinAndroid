@@ -3,10 +3,12 @@ package com.example.pinjemfinandroid.Activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pinjemfinandroid.Animation.Animation
+import com.example.pinjemfinandroid.Utils.combineLoading
 import com.example.pinjemfinandroid.ViewModel.AuthViewModel
 import com.example.pinjemfinandroid.databinding.ActivityRegisterBinding
 
@@ -22,6 +24,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.buttonsignup.backgroundTintList= null
         animation()
+        isLoading()
         // Observasi hasil pendaftaran
         authViewModel.registerResult.observe(this) { tokenResponse ->
             tokenResponse?.let {
@@ -60,5 +63,22 @@ class RegisterActivity : AppCompatActivity() {
         myAnimation.animationslideright(binding.vCreateAccount)
         myAnimation.animationslideleft(binding.vHand)
         myAnimation.animationPopup(binding.vCircle)
+    }
+
+    fun isLoading(){
+
+        val isLoading = combineLoading(
+            authViewModel.isLoading
+        )
+
+        isLoading.observe(this) { loading ->
+            if (loading) {
+                binding.loadingOverlay.visibility = View.VISIBLE
+                binding.lottieView.playAnimation()
+            } else {
+                binding.lottieView.cancelAnimation()
+                binding.loadingOverlay.visibility = View.GONE
+            }
+        }
     }
 }

@@ -19,11 +19,15 @@ class AccountViewModel : ViewModel() {
     private val _addDetailError = MutableLiveData<String>()
     val addDetailError: LiveData<String> = _addDetailError
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
 
 
     fun addDetailAccount(detailcustomer: DetailCustomerRequest, token:String) {
 
         val call = ApiConfig.getAkunService(token).addDetailAccount(detailcustomer)
+        _isLoading.value = true
         call.enqueue(object : Callback<DetailCustomerResponse> {
             override fun onResponse(
                 call: Call<DetailCustomerResponse>,
@@ -34,11 +38,13 @@ class AccountViewModel : ViewModel() {
                 } else {
                     _addDetailError.value = "Register gagal: ${response.code()}"
                 }
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<DetailCustomerResponse>, t: Throwable) {
 
                 _addDetailError.value = "Register error: ${t.message}"
+                _isLoading.value = false
             }
         })
     }

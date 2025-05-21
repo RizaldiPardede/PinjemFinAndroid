@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -15,6 +16,7 @@ import com.example.pinjemfinandroid.Local.entity.UserData
 import com.example.pinjemfinandroid.Model.ProfileResponse
 import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
+import com.example.pinjemfinandroid.Utils.combineLoading
 import com.example.pinjemfinandroid.ViewModel.AuthViewModel
 import com.example.pinjemfinandroid.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -49,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
         binding.buttonloggin.backgroundTintList = null
         binding.buttonsignup.backgroundTintList = null
         animation()
+        isLoading()
         preferenceHelper = PreferenceHelper(this)
         auth = FirebaseAuth.getInstance()
 
@@ -70,7 +73,11 @@ class LoginActivity : AppCompatActivity() {
 
                         Toast.makeText(this, "Logoin Successful!", Toast.LENGTH_SHORT).show()
                         it.token?.let { it1 -> preferenceHelper.setString("token", it1) }
-                        it.token?.let { it1 -> authViewModel.getProfile(it1) }
+                        it.token?.let { it1 ->
+                            authViewModel.getProfile(it1)
+                            authViewModel.getUser(it1)
+                        }
+
                         //taruh disini untuk get profile
 
                     }
@@ -87,6 +94,7 @@ class LoginActivity : AppCompatActivity() {
 
         }
         observeForRoom()
+        observeEmailPassword()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))  // pastikan sudah ada di strings.xml
             .requestEmail()
@@ -178,8 +186,13 @@ class LoginActivity : AppCompatActivity() {
 
         authViewModel.loginGoogleResult.observe(this){
 
-            it.token?.let { it1 -> preferenceHelper.setString("token", it1) }
+            it.token?.let { it1 -> preferenceHelper.setString("token", it1)
+            preferenceHelper.setString("email",email)
+                preferenceHelper.setString("username",username)
+            }
+
             it.token?.let { it1 -> authViewModel.getProfile(it1) }
+
         }
 
         authViewModel.loginGoogleError.observe(this){
@@ -225,6 +238,20 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    fun observeEmailPassword(){
+        authViewModel.getUserResult.observe(this){
+            it.nama?.let { it1 ->
+                preferenceHelper.setString("username", it1) }
+            it.email?.let{
+                preferenceHelper.setString("email",it)
+            }
+        }
+        authViewModel.getUserError.observe(this){
+            Toast.makeText(this,it,Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
     fun mapProfileResponseToEntity(response:ProfileResponse): UserData? {
         return response.users?.email?.let {
             UserData(
@@ -250,6 +277,23 @@ class LoginActivity : AppCompatActivity() {
                 longitude_branch = (response.branch?.longitudeBranch as? Double) ?: (response.branch?.longitudeBranch as? Float)?.toDouble(),
                 sisa_plafon = (response.sisaPlafon as? Double) ?: (response.sisaPlafon as? Float)?.toDouble()
             )
+        }
+    }
+
+    fun isLoading(){
+
+        val isLoading = combineLoading(
+            authViewModel.isLoading
+        )
+    
+        isLoading.observe(this) { loading ->
+            if (loading) {
+                binding.loadingOverlay.visibility = View.VISIBLE
+                binding.lottieView.playAnimation()
+            } else {
+                binding.lottieView.cancelAnimation()
+                binding.loadingOverlay.visibility = View.GONE
+            }
         }
     }
 }

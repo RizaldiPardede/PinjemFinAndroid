@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -33,6 +34,7 @@ import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.ViewModel.DokumenViewModel
 import com.example.pinjemfinandroid.ViewModel.TokenNotifViewModel
 import com.example.pinjemfinandroid.databinding.FragmentProfileBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -59,8 +61,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
     private lateinit var dataList: List<MenuModel>
     private val userRoomViewModel: UserRoomViewModel by viewModels()
     private var photoUri: Uri? = null
-    private lateinit var uploadImageViewModel: DokumenViewModel
-    private lateinit var tokenNotifViewModel: TokenNotifViewModel
+//    private lateinit var uploadImageViewModel: DokumenViewModel
+    private val uploadImageViewModel: DokumenViewModel by activityViewModels()
+    private val tokenNotifViewModel: TokenNotifViewModel by activityViewModels()
     private val cameraLauncher =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
@@ -124,8 +127,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        uploadImageViewModel = ViewModelProvider(this).get(DokumenViewModel::class.java)
-        tokenNotifViewModel = ViewModelProvider(this).get(TokenNotifViewModel::class.java)
+
         dataList = listOf(
             MenuModel("Profile Information", "Manage account details", R.drawable.baseline_account_circle_white),
             MenuModel("Plafon Information", "See Your Plafon here", R.drawable.baseline_credit_card_24),
@@ -149,12 +151,33 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
                 .into(binding.profileImage)
 
         })
+
+        uploadImageViewModel.profileImageError.observe(viewLifecycleOwner, Observer { result ->
+            val user = FirebaseAuth.getInstance().currentUser
+
+            // Cek apakah login pakai Google dan photoUrl tersedia
+            val isGoogleUser = user?.providerData?.any { it.providerId == "google.com" } == true
+            val photoUrl = user?.photoUrl
+
+            if (isGoogleUser && photoUrl != null) {
+                // Tampilkan foto Google ke ImageView
+                Glide.with(requireContext())
+                    .load(photoUrl)
+                    .into(binding.profileImage)
+            } else {
+                // Kalau tidak ada apa-apa, bisa tampilkan placeholder atau biarkan kosong
+                binding.profileImage.setImageResource(R.drawable.default_profile) // opsional
+            }
+        })
         observeUploadResult()
 
         binding.btnLogoutAccount.setOnClickListener {
             cleanTokenNotifFromAkun()
 
         }
+
+        binding.tvEmail.text = preferenceHelper.getString("email").toString()
+        binding.tvUsername.text = preferenceHelper.getString("username").toString()
 
     }
 

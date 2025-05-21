@@ -1,12 +1,14 @@
 package com.example.pinjemfinandroid.Network
 import com.example.pinjemfinandroid.Model.EmailActivationRequest
 import com.example.pinjemfinandroid.Model.EmailCekRequest
+import com.example.pinjemfinandroid.Model.GetUserResponse
 import com.example.pinjemfinandroid.Model.LoginGoogleRequest
 import com.example.pinjemfinandroid.Model.LoginRequest
 import com.example.pinjemfinandroid.Model.MessageResponse
 import com.example.pinjemfinandroid.Model.ProfileResponse
 import com.example.pinjemfinandroid.Model.RegisterRequest
 import com.example.pinjemfinandroid.Model.TokenResponse
+import com.example.pinjemfinandroid.Model.UpdatePasswordRequest
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -30,6 +32,12 @@ interface ApiService {
 
     @POST("auth/registerAuthGoogle")
     fun registerAuthGoogle(@Body request: RegisterRequest): Call<TokenResponse>
+
+    @POST("auth/getUser")
+    fun getUser(): Call<GetUserResponse>
+
+    @POST("auth/updatePassword")
+    fun updatepassword(@Body request: UpdatePasswordRequest): Call<MessageResponse>
 
     @GET("customer/getProfile")
     fun getProfile(): Call<ProfileResponse>
