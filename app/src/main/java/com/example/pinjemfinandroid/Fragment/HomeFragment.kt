@@ -1,19 +1,26 @@
 package com.example.pinjemfinandroid.Fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.pinjemfinandroid.Activity.DashboardActivity
+import com.example.pinjemfinandroid.Adapter.PlafonAdapter
+import com.example.pinjemfinandroid.Adapter.PlafonHomeAdapter
 import com.example.pinjemfinandroid.Animation.Animation
 import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.Utils.RupiahFormatter
 
 import com.example.pinjemfinandroid.ViewModel.HomeViewModel
+import com.example.pinjemfinandroid.ViewModel.PlafonViewModel
 import com.example.pinjemfinandroid.databinding.FragmentHomeBinding
 
 
@@ -36,7 +43,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel: HomeViewModel by activityViewModels()
     private lateinit var preferenceHelper: PreferenceHelper
     private val sharedViewModel: SharedViewModel by activityViewModels()
-
+    private val plafonViewModel: PlafonViewModel by activityViewModels()
+    private lateinit var plafonAdapter: PlafonHomeAdapter
+    private var currentPosition = 0
+    private val autoScrollHandler = android.os.Handler()
+    private lateinit var autoScrollRunnable: Runnable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -54,9 +65,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // Inflate the layout for this fragment
         preferenceHelper = PreferenceHelper(requireContext())
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        ViewCompat.setZ(binding.ivPlafon, 2f)
+        ViewCompat.setZ(binding.rvCardhome, 2f)
         ViewCompat.setZ(binding.shapeprofile, 1f)
         binding.btnSimulasi.backgroundTintList = null
+        binding.rvCardhome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        plafonViewModel.getAllPlafon()
+        plafonsetup()
         binding.btnSimulasi.setOnClickListener {
             val amount = binding.etAmount.getCleanValue().toDouble()
             val tenor = binding.etTenor.text.toString().toIntOrNull()
@@ -137,5 +151,56 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         (activity as? DashboardActivity)?.moveToPage(2)
     }
 
+    private fun plafonsetup(){
+        plafonViewModel.getAllPlafonResult.observe(viewLifecycleOwner) { plafonList ->
+            plafonAdapter = PlafonHomeAdapter(plafonList)
 
+            val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            binding.rvCardhome.layoutManager = layoutManager
+            binding.rvCardhome.adapter = plafonAdapter
+
+            // Snap helper
+            val snapHelper = LinearSnapHelper()
+            snapHelper.attachToRecyclerView(binding.rvCardhome)
+
+            // Auto-scroll tiap 3 detik
+            autoScrollRunnable = object : Runnable {
+                override fun run() {
+                    if (plafonAdapter.itemCount == 0) return
+
+                    currentPosition++
+                    if (currentPosition >= plafonAdapter.itemCount) {
+                        currentPosition = 0 // kembali ke awal
+                    }
+
+                    binding.rvCardhome.smoothScrollToPosition(currentPosition)
+                    autoScrollHandler.postDelayed(this, 3000) // ulang setiap 3 detik
+                }
+            }
+            autoScrollHandler.postDelayed(autoScrollRunnable, 3000)
+        }
+
+        plafonViewModel.getAllPlafonError.observe(viewLifecycleOwner) {
+            Log.d("get all plafon : ", "$it")
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        autoScrollHandler.removeCallbacks(autoScrollRunnable)
+        _binding = null
+    }
+    override fun onResume() {
+        super.onResume()
+        if (::autoScrollRunnable.isInitialized) {
+            autoScrollHandler.postDelayed(autoScrollRunnable, 3000)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (::autoScrollRunnable.isInitialized) {
+            autoScrollHandler.removeCallbacks(autoScrollRunnable)
+        }
+    }
 }

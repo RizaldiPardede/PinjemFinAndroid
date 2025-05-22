@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.HomeFragment"
     android:background="@color/pf_primary">
 
@@ -17,40 +18,30 @@
     <ScrollView
         android:id="@+id/v_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/base_shape3"
+
+        >
 
 
         <!-- TODO: Update blank fragment layout -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/base_shape3"
 
+            >
 
-
-
-
-
-
-
-            <ImageView
-                android:layout_width="38dp"
-                android:layout_height="35dp"
-                android:layout_above="@+id/tv_username"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="18dp"
-                android:layout_marginEnd="18dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/baseline_notifications_none_24" />
 
             <TextView
+
                 android:id="@+id/texthalo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="31dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="90dp"
                 android:fontFamily="@font/poppins_bold"
                 android:text="Selamat Datang"
@@ -74,23 +65,22 @@
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/tv_username"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="30dp"
                 android:background="@android:color/transparent"
                 android:orientation="vertical"
                 android:paddingTop="15dp">
-
-                <ImageView
-                    android:id="@+id/iv_plafon"
-                    android:layout_width="wrap_content"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_cardhome"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    tools:listitem="@layout/item_plafonhome"
+                    tools:layoutManager="LinearLayoutManager"
+                    tools:orientation="horizontal"
+                    ></androidx.recyclerview.widget.RecyclerView>
 
-                    android:background="@drawable/card_default"
-
-                    />
 
 
                 <ImageView
@@ -104,7 +94,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@color/white"
                     android:orientation="vertical">
 
@@ -112,7 +102,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="-10dp"
-                        android:layout_marginBottom="30dp"
+                        android:layout_marginBottom="60dp"
                         android:background="@drawable/shape_card"
                         android:elevation="8dp"
                         android:orientation="vertical"
@@ -141,10 +131,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
                             android:background="@drawable/reactangleinputext"
-                            android:inputType="number"
-                            android:padding="5dp"
                             android:hint="Rp 0"
-                            />
+                            android:inputType="number"
+                            android:padding="5dp" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -183,7 +172,7 @@
                         android:id="@+id/lin_hasilSimulasi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
+                        android:layout_marginBottom="60dp"
                         android:background="@drawable/shape_card"
                         android:elevation="8dp"
                         android:orientation="vertical"
@@ -216,7 +205,7 @@
                             android:paddingStart="10dp"
                             android:text="IDR 000.000.000"
                             android:textColor="@color/pf_text_primary"
-                            android:textSize="12sp"/>
+                            android:textSize="12sp" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -298,11 +287,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/shapebutton"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"
-                            android:text="Ajukan Sekarang"
                             android:fontFamily="@font/poppins_semibold"
-                            />
+                            android:text="Ajukan Sekarang"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
                     </LinearLayout>
 
 
@@ -313,5 +301,30 @@
 
         </RelativeLayout>
 
+
     </ScrollView>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/myToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/concave_toolbar_bg"
+
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:contentInsetStart="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <!-- Logo di kiri -->
+        <ImageView
+            android:id="@+id/logoIcon"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="0dp"
+            android:layout_marginBottom="35dp"
+            android:contentDescription="Logo"
+            android:src="@drawable/logo_actionbar" />
+
+    </androidx.appcompat.widget.Toolbar>
+
 </RelativeLayout>

@@ -1,0 +1,36 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/cardHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:contentDescription="image"
+        android:orientation="vertical"
+        android:background="@drawable/card_default"
+        >
+        <TextView
+            android:id="@+id/tv_plafontype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="46dp"
+            android:layout_marginTop="70dp"
+            android:fontFamily="@font/poppins_semibold"
+
+            android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/tv_plafonamount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="46dp"
+
+            android:fontFamily="@font/poppins_semibold"
+            android:text="test"
+            android:textColor="@color/white" />
+
+
+    </LinearLayout>
+</FrameLayout>

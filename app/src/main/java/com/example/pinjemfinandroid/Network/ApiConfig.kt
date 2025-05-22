@@ -37,4 +37,5 @@ object ApiConfig {
     fun uploadDokumenservice(token: String? = null): DokumenService = provideRetrofit(token).create(DokumenService::class.java)
 
     fun gettokenNotifikasiservice(token: String? = null): TokenNotificationService = provideRetrofit(token).create(TokenNotificationService::class.java)
+    fun getPlafon(token: String? = null): PlafonService = provideRetrofit(token).create(PlafonService::class.java)
 }

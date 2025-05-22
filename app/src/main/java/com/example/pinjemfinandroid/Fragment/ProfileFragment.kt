@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide
 import com.example.pinjemfinandroid.Activity.AddDetailActivity
 import com.example.pinjemfinandroid.Activity.GantiPasswordActivity
 import com.example.pinjemfinandroid.Activity.LoginActivity
+import com.example.pinjemfinandroid.Activity.PlafonActivity
 import com.example.pinjemfinandroid.Adapter.MenuAdapter
 import com.example.pinjemfinandroid.Local.UserRoomViewModel
 import com.example.pinjemfinandroid.Model.MenuModel
@@ -220,7 +221,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
                 startActivity(Intent(requireContext(),AddDetailActivity::class.java))
             }
             1 -> {
-
+                startActivity(Intent(requireContext(),PlafonActivity::class.java))
             }
             2 -> {
 
