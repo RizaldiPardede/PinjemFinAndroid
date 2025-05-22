@@ -5,14 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import com.example.pinjemfinandroid.Activity.DashboardActivity
 import com.example.pinjemfinandroid.Animation.Animation
 import com.example.pinjemfinandroid.R
+import com.example.pinjemfinandroid.Utils.PreferenceHelper
+import com.example.pinjemfinandroid.Utils.RupiahFormatter
+
 import com.example.pinjemfinandroid.ViewModel.HomeViewModel
 import com.example.pinjemfinandroid.databinding.FragmentHomeBinding
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,6 +34,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: HomeViewModel by activityViewModels()
+    private lateinit var preferenceHelper: PreferenceHelper
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +52,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
+        preferenceHelper = PreferenceHelper(requireContext())
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         ViewCompat.setZ(binding.ivPlafon, 2f)
         ViewCompat.setZ(binding.shapeprofile, 1f)
@@ -56,7 +61,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             val amount = binding.etAmount.getCleanValue().toDouble()
             val tenor = binding.etTenor.text.toString().toIntOrNull()
             if (tenor != null) {
-                viewModel.getSimulasiPengajuan(amount, tenor)
+                val token = preferenceHelper.getString("token")
+                if(token.isNullOrEmpty()){
+                    binding.btnAjukan.visibility = View.GONE
+                    viewModel.getSimulasiPengajuanNoAuth(amount, tenor)
+                }
+                else{
+
+                    viewModel.getSimulasiPengajuanWithAuth(amount,tenor,token)
+                }
+
+            }
+
+            binding.btnAjukan.setOnClickListener {
+                sendLiveDatatsr(binding.tvPinjaman.text.toString()
+                    ,binding.tvTenor.text.toString().toInt())
+
             }
         }
 
@@ -66,11 +86,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.linHasilSimulasi.visibility = View.VISIBLE
             val myAnimation = Animation()
             myAnimation.animationPopup(binding.linHasilSimulasi)
-            binding.tvPinjaman.text = result.amount.toString()
-            binding.tvAngsuran.text = result.angsuran.toString()
+            binding.tvPinjaman.text = result.amount?.let { RupiahFormatter.format(it) }
+            binding.tvAngsuran.text = result.angsuran?.let { RupiahFormatter.format(it) }
             binding.tvBunga.text = result.bunga.toString()
             binding.tvTenor.text = result.tenor.toString()
-            binding.tvTotalPayment.text = result.total_payment.toString()
+            binding.tvTotalPayment.text = result.total_payment?.let { RupiahFormatter.format(it) }
             val scrollView = binding.vScrollView
             val targetLayout = binding.linHasilSimulasi
             scrollView.post {
@@ -107,4 +127,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
     }
+
+    private fun sendLiveDatatsr(amount : String, tenor:Int) {
+        val amount = RupiahFormatter.deformat(amount)
+        val tenor = tenor
+
+        sharedViewModel.setAmount(amount)
+        sharedViewModel.setTenor(tenor)
+        (activity as? DashboardActivity)?.moveToPage(2)
+    }
+
+
 }

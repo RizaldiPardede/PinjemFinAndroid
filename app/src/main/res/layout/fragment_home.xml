@@ -7,6 +7,13 @@
     tools:context=".Fragment.HomeFragment"
     android:background="@color/pf_primary">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="485dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/iv_circle_line3"
+
+        />
     <ScrollView
         android:id="@+id/v_scroll_view"
         android:layout_width="match_parent"
@@ -20,12 +27,7 @@
 
 
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/iv_circle_line"
 
-                />
 
 
 
@@ -291,7 +293,16 @@
 
                         </LinearLayout>
 
-
+                        <Button
+                            android:id="@+id/btn_ajukan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shapebutton"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:text="Ajukan Sekarang"
+                            android:fontFamily="@font/poppins_semibold"
+                            />
                     </LinearLayout>
 
 

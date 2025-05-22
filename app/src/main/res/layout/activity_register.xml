@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
 
             android:fontFamily="@font/poppins_medium"
-            android:text="Full name"
+            android:text="Nama Lengkap"
             android:textColor="@color/pf_text_primary"
             android:textSize="15sp" />
 
@@ -130,7 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/poppins_medium"
-            android:text="confirm password"
+            android:text="Konfirmasi password"
             android:textColor="@color/pf_text_primary"
             android:textSize="15sp" />
 
@@ -155,21 +155,25 @@
             android:background="@drawable/shapebutton"
             android:backgroundTint="@null"
             android:fontFamily="@font/poppins_medium"
-            android:text="Sign Up"
+            android:text="Register"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tv_haveaccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/leaguespartan_semibold"
-            android:text="Already have an account?  Log In"
+            android:text="Sudah memiliki akun?  Login"
             android:textAlignment="center"
             android:textSize="14sp"
             android:textColor="@color/pf_text_primary"
+            android:textColorLink="@android:color/holo_blue_light"
+            android:clickable="true"
+            android:linksClickable="true"
 
             />
 

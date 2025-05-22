@@ -35,6 +35,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
     private var param2: String? = null
     private var _binding: FragmentTransactionBinding? = null
     private lateinit var preferenceHelper: PreferenceHelper
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val binding get() = _binding!!
     private val pengajuanViewModel: PengajuanViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +54,11 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
     ): View? {
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
-
-
+        observeDatafromHome()
+        val token = preferenceHelper.getString("token")
+        if (token != null) {
+            pengajuanViewModel.getInformasiPlafonCustomer(token)
+        }
         return binding.root
     }
 
@@ -62,6 +66,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
         super.onViewCreated(view, savedInstanceState)
 
 //        pengajuanViewModel = ViewModelProvider(this).get(PengajuanViewModel::class.java)
+
         preferenceHelper.getString("token")?.let { statisticPinjaman(it) }
         binding.btnAjukan.setOnClickListener {
             if (preferenceHelper.getString("token").isNullOrEmpty()){
@@ -130,7 +135,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
     }
 
     fun statisticPinjaman(token:String){
-        pengajuanViewModel.getInformasiPlafonCustomer(token)
+
         pengajuanViewModel.informasiPengajuan.observe(viewLifecycleOwner, Observer {
             binding.tvJumlahPlafon.text = it.jumlahPlafon.toString()
             binding.tvSisaPlafon.text = it.sisaPlafon.toString()
@@ -182,5 +187,22 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    fun observeDatafromHome(){
+        sharedViewModel.amount.observe(viewLifecycleOwner) { amount ->
+            binding.etAmount.setText(amount.toString())
+            val scrollView = binding.vScrollView
+            val targetLayout = binding.linearPengajuan
+            scrollView.post {
+                scrollView.smoothScrollTo(0, targetLayout.top)
+                targetLayout.requestFocus()
+            }
+        }
+
+        sharedViewModel.tenor.observe(viewLifecycleOwner) { tenor ->
+
+            binding.etTenor.setText(tenor.toString())
+        }
     }
 }

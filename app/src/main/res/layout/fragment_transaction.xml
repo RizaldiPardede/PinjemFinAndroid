@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragment.TransactionFragment"
@@ -41,7 +42,7 @@
                 android:layout_marginStart="46dp"
                 android:layout_marginTop="90dp"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Default plafon"
+                android:text=""
                 android:textColor="@color/white" />
         </LinearLayout>
 
@@ -50,9 +51,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/base_shape2"
-            android:padding="10dp"
+            android:padding="15dp"
+            android:layout_marginTop="-60dp"
             android:orientation="vertical"
             >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Informasi Plafon"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/pf_text_primary"
+                android:fontFamily="@font/poppins_bold"
+                />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,14 +73,14 @@
                     android:id="@+id/pb_perentase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="80%"
+                    android:text="0%"
                     android:fontFamily="@font/poppins_semibold"
                     />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text=" For level Up"
+                    android:text=" Exp"
                     android:fontFamily="@font/poppins_semibold"
                     />
 
@@ -93,7 +105,7 @@
                 android:id="@+id/tv_sisaPlafon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="IDR 1.000.000.000"
+                android:text="IDR 0"
                 android:textSize="14sp"
                 android:textColor="@color/pf_text_primary"
                 android:fontFamily="@font/poppins_semibold"
@@ -112,7 +124,7 @@
                 android:id="@+id/tv_pinjamanlunas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="IDR 1.000.000.000"
+                android:text="IDR 0"
                 android:textSize="14sp"
                 android:textColor="@color/pf_text_primary"
                 android:fontFamily="@font/poppins_semibold"
@@ -130,7 +142,7 @@
                 android:id="@+id/tv_pinjamansekarang"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="IDR 1.000.000.000"
+                android:text="IDR 0"
                 android:textSize="14sp"
                 android:textColor="@color/pf_text_primary"
                 android:fontFamily="@font/poppins_semibold"
@@ -139,13 +151,23 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearPengajuan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/base_shape2"
-            android:padding="10dp"
+            android:padding="15dp"
             android:layout_marginTop="20dp"
             >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Pengajuan"
+                android:layout_marginBottom="15dp"
+                android:textColor="@color/pf_text_primary"
+                android:fontFamily="@font/poppins_bold"
+                />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

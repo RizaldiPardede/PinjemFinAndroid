@@ -13,8 +13,9 @@ import retrofit2.http.POST
 
 interface PengajuanService {
     @POST("customer/getSimulasiNoAuth")
+    fun getSimulasiNoAuth(@Body request: SimulasiRequest): Call<SimulasiResponse>
+    @POST("customer/getSimulasi")
     fun getSimulasi(@Body request: SimulasiRequest): Call<SimulasiResponse>
-
     @POST("pengajuan/CreatePengajuan")
     fun postPengajuan(@Body request: PengajuanRequest): Call<PengajuanResponse>
 

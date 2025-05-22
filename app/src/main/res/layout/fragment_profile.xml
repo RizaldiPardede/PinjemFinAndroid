@@ -92,6 +92,17 @@
                     android:text="Logout"
                     android:textColor="@color/white" />
 
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="96dp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="Login"
+                    android:textColor="@color/white"
+                    android:visibility="gone"
+                    />
+
             </LinearLayout>
 
             <de.hdodenhof.circleimageview.CircleImageView

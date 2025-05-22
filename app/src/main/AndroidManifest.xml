@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.pinjemfinandroid"
-    >
+    package="com.example.pinjemfinandroid">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -20,6 +19,7 @@
         android:maxSdkVersion="28" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -30,23 +30,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PinjemFinAndroid"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31"
-        android:name=".MyApplication"
-        >
+        tools:targetApi="31">
+        <activity
+            android:name=".Activity.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.GantiPasswordActivity"
+            android:exported="false" />
         <activity
             android:name=".Activity.VerifikasiEmailActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="pinjemfin-verification.vercel.app"
-                    android:pathPrefix="/verifikasi" />
+                    android:pathPrefix="/verifikasi"
+                    android:scheme="https" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".Activity.CreatePasswordAuthGoogleActivity"

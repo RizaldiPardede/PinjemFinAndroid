@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:fontFamily="@font/poppins_semibold"
-        android:text="Welcome to"
+        android:text="Selamat Datang di"
         android:textAlignment="textStart"
         android:textColor="@color/white"
         android:textSize="30sp"
@@ -116,6 +116,7 @@
             android:textSize="12sp"
 
 
+
             />
 
         <TextView
@@ -161,14 +162,18 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tv_forgotPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/leaguespartan_semibold"
-            android:text="Forgot Password?"
+            android:text="Lupa Password?"
             android:textAlignment="center"
             android:textSize="12sp"
             android:textColor="@color/pf_text_secondary"
+            android:textColorLink="@android:color/holo_blue_light"
+            android:clickable="true"
+            android:linksClickable="true"
             />
 
         <Button
@@ -180,7 +185,7 @@
             android:background="@drawable/shapebutton2"
             android:backgroundTint="@null"
             android:fontFamily="@font/poppins_medium"
-            android:text="Sign Up"
+            android:text="Register"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="12sp"
@@ -191,7 +196,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:fontFamily="@font/leaguespartan_light"
-            android:text="or sign up with"
+            android:text="atau login dengan"
             android:textAlignment="center"
             android:textSize="12sp"
             android:textColor="@color/pf_text_secondary"

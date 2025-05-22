@@ -20,10 +20,35 @@ class HomeViewModel: ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    fun getSimulasiPengajuan(amount: Double, tenor: Int) {
+    fun getSimulasiPengajuanNoAuth(amount: Double, tenor: Int) {
 
         val request = SimulasiRequest(amount,tenor)
-        val call = ApiConfig.getPengajuanService().getSimulasi(request)
+        val call = ApiConfig.getPengajuanService().getSimulasiNoAuth(request)
+        _isLoading.value = true
+        call.enqueue(object : Callback<SimulasiResponse> {
+            override fun onResponse(
+                call: Call<SimulasiResponse>,
+                response: Response<SimulasiResponse>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    _simulasiResult.value = response.body()!!
+                } else {
+                    _simulasiError.value = "Simulasi gagal: ${response.code()}"
+                }
+                _isLoading.value = false
+            }
+
+            override fun onFailure(call: Call<SimulasiResponse>, t: Throwable) {
+
+                _simulasiError.value = "Simulasi error: ${t.message}"
+                _isLoading.value = false
+            }
+        })
+    }
+
+    fun getSimulasiPengajuanWithAuth(amount: Double, tenor: Int,token:String) {
+        val request = SimulasiRequest(amount,tenor)
+        val call = ApiConfig.getPengajuanService(token).getSimulasi(request)
         _isLoading.value = true
         call.enqueue(object : Callback<SimulasiResponse> {
             override fun onResponse(

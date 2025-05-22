@@ -1,6 +1,7 @@
 package com.example.pinjemfinandroid.Network
 import com.example.pinjemfinandroid.Model.EmailActivationRequest
 import com.example.pinjemfinandroid.Model.EmailCekRequest
+import com.example.pinjemfinandroid.Model.ForgotPasswordRequest
 import com.example.pinjemfinandroid.Model.GetUserResponse
 import com.example.pinjemfinandroid.Model.LoginGoogleRequest
 import com.example.pinjemfinandroid.Model.LoginRequest
@@ -41,6 +42,9 @@ interface ApiService {
 
     @GET("customer/getProfile")
     fun getProfile(): Call<ProfileResponse>
+
+    @POST("auth/forgot-password")
+    fun postforgotpassword(@Body request:ForgotPasswordRequest): Call<MessageResponse>
 
 
 

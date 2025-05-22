@@ -1,8 +1,14 @@
 package com.example.pinjemfinandroid.Activity
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -52,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
         binding.buttonsignup.backgroundTintList = null
         animation()
         isLoading()
+        forgotpassword()
         preferenceHelper = PreferenceHelper(this)
         auth = FirebaseAuth.getInstance()
 
@@ -131,16 +138,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun animation(){
-        val myAnimation = Animation()
-        myAnimation.animationslideright(binding.textView)
-        myAnimation.animationslideright(binding.textView2)
-        myAnimation.animationslidebottom(binding.linearLayout)
-        myAnimation.animationslideleft(binding.imageView2)
-        myAnimation.animationslideleft(binding.circleLine)
-        myAnimation.animationPopup(binding.circle)
-
-    }
     private fun signInGoogle() {
         googleSignInClient.signOut().addOnCompleteListener {
             val signInIntent = googleSignInClient.signInIntent
@@ -295,5 +292,39 @@ class LoginActivity : AppCompatActivity() {
                 binding.loadingOverlay.visibility = View.GONE
             }
         }
+    }
+
+    private fun forgotpassword(){
+        val fullText = "Lupa Password?"
+        val spannableString = SpannableString(fullText)
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                startActivity(Intent(this@LoginActivity,ForgotPasswordActivity::class.java))
+                // Aksi lain bisa ditaruh di sini, seperti membuka halaman lain
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = false // hilangkan underline
+                ds.color = Color.BLUE // atur warna jika mau
+            }
+        }
+
+        spannableString.setSpan(clickableSpan, 0, fullText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        binding.tvForgotPassword.text = spannableString
+        binding.tvForgotPassword.movementMethod = LinkMovementMethod.getInstance()
+        binding.tvForgotPassword.highlightColor = Color.TRANSPARENT
+    }
+    private fun animation(){
+        val myAnimation = Animation()
+        myAnimation.animationslideright(binding.textView)
+        myAnimation.animationslideright(binding.textView2)
+        myAnimation.animationslidebottom(binding.linearLayout)
+        myAnimation.animationslideleft(binding.imageView2)
+        myAnimation.animationslideleft(binding.circleLine)
+        myAnimation.animationPopup(binding.circle)
+
     }
 }

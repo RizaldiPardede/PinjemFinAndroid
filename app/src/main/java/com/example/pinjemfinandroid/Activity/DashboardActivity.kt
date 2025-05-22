@@ -157,5 +157,10 @@ class DashboardActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun moveToPage(index: Int) {
+        binding.fragmentContainer.setCurrentItem(index, true)
+        binding.bottomNavigation.show(index + 1) // karena NafisBottomNavigation mulai dari id = 1
+    }
 }
 

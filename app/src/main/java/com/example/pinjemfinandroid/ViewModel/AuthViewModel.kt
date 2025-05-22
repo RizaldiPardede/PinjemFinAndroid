@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.pinjemfinandroid.Network.ApiConfig
 import com.example.pinjemfinandroid.Model.EmailActivationRequest
 import com.example.pinjemfinandroid.Model.EmailCekRequest
+import com.example.pinjemfinandroid.Model.ForgotPasswordRequest
 import com.example.pinjemfinandroid.Model.GetUserResponse
 import com.example.pinjemfinandroid.Model.LoginGoogleRequest
 import com.example.pinjemfinandroid.Model.LoginRequest
@@ -73,11 +74,17 @@ class AuthViewModel: ViewModel() {
     private val _getUserError = MutableLiveData<String>()
     val getUserError: LiveData<String> = _getUserError
 
-    private val _updateUserResult = MutableLiveData<MessageResponse>()
-    val updateUserResult: LiveData<MessageResponse> = _updateUserResult
+    private val _updatePasswordResult = MutableLiveData<MessageResponse>()
+    val updatePasswordResult: LiveData<MessageResponse> = _updatePasswordResult
 
-    private val _updateUserError = MutableLiveData<String>()
-    val updateUserError: LiveData<String> = _updateUserError
+    private val _updatePasswordError = MutableLiveData<String>()
+    val updatePasswordError: LiveData<String> = _updatePasswordError
+
+    private val _forgotPasswordResult = MutableLiveData<MessageResponse>()
+    val forgotPasswordResult: LiveData<MessageResponse> = _forgotPasswordResult
+
+    private val _forgotPasswordError = MutableLiveData<String>()
+    val forgotPasswordError: LiveData<String> = _forgotPasswordError
     fun PostRegisterUser(username: String, password: String, nama: String) {
         val request = RegisterRequest(password,nama,username)
         val call = ApiConfig.getApiService().Register(request)
@@ -331,18 +338,18 @@ class AuthViewModel: ViewModel() {
                 response: Response<MessageResponse>
             ) {
                 if (response.isSuccessful && response.body() != null) {
-                    _updateUserResult.value = response.body()!!
+                    _updatePasswordResult.value = response.body()!!
                 } else {
                     val errorBodyString = response.errorBody()?.string()
                     if (!errorBodyString.isNullOrEmpty()) {
                         try {
                             val errorResponse = Gson().fromJson(errorBodyString, MessageResponse::class.java)
-                            _updateUserError.value = errorResponse?.message ?: "Terjadi kesalahan tidak diketahui"
+                            _updatePasswordError.value = errorResponse?.message ?: "Terjadi kesalahan tidak diketahui"
                         } catch (e: Exception) {
-                            _updateUserError.value = "gagal: $errorBodyString"
+                            _updatePasswordError.value = "gagal: $errorBodyString"
                         }
                     } else {
-                        _updateUserError.value = "gagal: Response error kosong"
+                        _updatePasswordError.value = "gagal: Response error kosong"
                     }
                 }
                 _isLoading.value = false
@@ -350,7 +357,43 @@ class AuthViewModel: ViewModel() {
 
             override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
 
-                _updateUserError.value = "error: ${t.message}"
+                _updatePasswordError.value = "error: ${t.message}"
+                _isLoading.value = false
+            }
+        })
+    }
+
+
+    fun forgotPassword(email:String){
+        val request  = ForgotPasswordRequest(email)
+        val call = ApiConfig.getApiService().postforgotpassword(request)
+        _isLoading.value = true
+        call.enqueue(object : Callback<MessageResponse> {
+            override fun onResponse(
+                call: Call<MessageResponse>,
+                response: Response<MessageResponse>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    _updatePasswordResult.value = response.body()!!
+                } else {
+                    val errorBodyString = response.errorBody()?.string()
+                    if (!errorBodyString.isNullOrEmpty()) {
+                        try {
+                            val errorResponse = Gson().fromJson(errorBodyString, MessageResponse::class.java)
+                            _updatePasswordError.value = errorResponse?.message ?: "Terjadi kesalahan tidak diketahui"
+                        } catch (e: Exception) {
+                            _updatePasswordError.value = "gagal: $errorBodyString"
+                        }
+                    } else {
+                        _updatePasswordError.value = "gagal: Response error kosong"
+                    }
+                }
+                _isLoading.value = false
+            }
+
+            override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
+
+                _updatePasswordError.value = "error: ${t.message}"
                 _isLoading.value = false
             }
         })

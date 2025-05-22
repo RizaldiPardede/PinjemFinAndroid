@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.pinjemfinandroid.Activity.AddDetailActivity
+import com.example.pinjemfinandroid.Activity.GantiPasswordActivity
 import com.example.pinjemfinandroid.Activity.LoginActivity
 import com.example.pinjemfinandroid.Adapter.MenuAdapter
 import com.example.pinjemfinandroid.Local.UserRoomViewModel
@@ -103,6 +104,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
         ViewCompat.setZ(binding.profileImage, 2f)
         ViewCompat.setZ(binding.linearLayout, 1f)
         binding.btnLogoutAccount.backgroundTintList = null
+        val token = preferenceHelper.getString("token")
+        if (token.isNullOrEmpty()){
+            setAllGone()
+        }
+        binding.btnLogin.setOnClickListener {
+            startActivity(Intent(requireContext(),LoginActivity::class.java))
+        }
         binding.btnLogoutAccount.setOnClickListener{
 
             showConfirmationDialog(
@@ -131,7 +139,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
         dataList = listOf(
             MenuModel("Profile Information", "Manage account details", R.drawable.baseline_account_circle_white),
             MenuModel("Plafon Information", "See Your Plafon here", R.drawable.baseline_credit_card_24),
-            MenuModel("Payment History", "See your history paymeny", R.drawable.baseline_account_balance_wallet)
+            MenuModel("Payment History", "See your history paymeny", R.drawable.baseline_account_balance_wallet),
+            MenuModel("Ganti Password", "Change your password here", R.drawable.baseline_key)
         )
 
         recyclerView = view.findViewById(R.id.recyclerMenu)
@@ -215,6 +224,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
             }
             2 -> {
 
+            }
+            3 -> {
+                startActivity(Intent(requireContext(),GantiPasswordActivity::class.java))
             }
             else -> {
                 Toast.makeText(requireContext(), "Klik menu lainnya", Toast.LENGTH_SHORT).show()
@@ -366,6 +378,17 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
         tokenNotifViewModel.cleanTokenError.observe(viewLifecycleOwner){
             it.let { it1 -> Log.d("Token Notifikasi", it1) }
         }
+    }
+
+    private fun setAllGone(){
+        binding.recyclerMenu.visibility = View.GONE
+        binding.tvListmenu.visibility = View.GONE
+        binding.bannerProfile.visibility = View.GONE
+        binding.bannerProfile.visibility = View.GONE
+        binding.tvEmail.visibility = View.GONE
+        binding.tvUsername.visibility = View.GONE
+        binding.btnLogin.visibility = View.VISIBLE
+        binding.btnLogoutAccount.visibility = View.GONE
     }
 
 }
