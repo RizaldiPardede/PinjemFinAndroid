@@ -21,7 +21,9 @@ import com.example.pinjemfinandroid.Local.UserRoomViewModel
 import com.example.pinjemfinandroid.Local.entity.UserData
 import com.example.pinjemfinandroid.Model.DetailCustomerRequest
 import com.example.pinjemfinandroid.Model.ProfileResponse
+import com.example.pinjemfinandroid.Utils.AlertEvent
 import com.example.pinjemfinandroid.Utils.LocationHelper
+import com.example.pinjemfinandroid.Utils.LottieAlertHelper
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.Utils.combineLoading
 import com.example.pinjemfinandroid.ViewModel.AccountViewModel
@@ -102,6 +104,7 @@ class AddDetailActivity : AppCompatActivity() {
         dokumenViewModel = ViewModelProvider(this).get(DokumenViewModel::class.java)
         showLocationPermissionDialog()
         isLoading()
+        observealert()
         userRoomViewModel.loadUsers()
 
         if (preferenceHelper.getString("token").isNullOrEmpty()){
@@ -462,6 +465,40 @@ class AddDetailActivity : AppCompatActivity() {
             } else {
                 binding.lottieView.cancelAnimation()
                 binding.loadingOverlay.visibility = View.GONE
+            }
+        }
+    }
+
+    fun observealert(){
+        dokumenViewModel.alertEvent.observe(this) { event ->
+            when (event) {
+                is AlertEvent.ShowSuccess -> {
+                    LottieAlertHelper.showSuccess(this,  event.message)
+
+                }
+                is AlertEvent.ShowError -> {
+                    LottieAlertHelper.showError(this, event.message)
+
+                }
+                AlertEvent.Dismiss -> {
+                    // Optional: bisa digunakan untuk dismiss manual
+                }
+            }
+        }
+
+        accountViewModel.alertEvent.observe(this) { event ->
+            when (event) {
+                is AlertEvent.ShowSuccess -> {
+                    LottieAlertHelper.showSuccess(this,  event.message)
+
+                }
+                is AlertEvent.ShowError -> {
+                    LottieAlertHelper.showError(this, event.message)
+
+                }
+                AlertEvent.Dismiss -> {
+                    // Optional: bisa digunakan untuk dismiss manual
+                }
             }
         }
     }

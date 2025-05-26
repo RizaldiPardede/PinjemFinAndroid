@@ -28,7 +28,7 @@
             android:layout_marginStart="46dp"
 
             android:fontFamily="@font/poppins_semibold"
-            android:text="test"
+
             android:textColor="@color/white" />
 
 

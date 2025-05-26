@@ -9,6 +9,9 @@ import com.example.pinjemfinandroid.Model.InformasiPengajuanResponse
 import com.example.pinjemfinandroid.Model.MessageResponse
 import com.example.pinjemfinandroid.Model.PengajuanRequest
 import com.example.pinjemfinandroid.Model.PengajuanResponse
+import com.example.pinjemfinandroid.Utils.AlertEvent
+import com.example.pinjemfinandroid.Utils.ErrorHandler
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,6 +44,9 @@ class PengajuanViewModel: ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _alertEvent = MutableLiveData<AlertEvent>()
+    val alertEvent: LiveData<AlertEvent> = _alertEvent
     fun postPengajuan(pengajuanRequest: PengajuanRequest, token:String) {
 
         val call = ApiConfig.getPengajuanService(token).postPengajuan(pengajuanRequest)
@@ -52,15 +58,24 @@ class PengajuanViewModel: ViewModel() {
             ) {
                 if (response.isSuccessful && response.body() != null) {
                     _pengajuanResponse.value = response.body()!!
+                    _alertEvent.value =AlertEvent.ShowSuccess("Berhasil tambahkan pengajuan")
+
                 } else {
-                    _pengajuanError.value = "Error: ${response.code()}"
+                    val errorBodyString = response.errorBody()?.string()
+                    ErrorHandler.handleErrorResponse(errorBodyString,
+                        onError = { message -> _pengajuanError.value = message },
+                        onAlert = { alert -> _alertEvent.value = alert }
+                    )
                 }
                 _isLoading.value = false
             }
 
             override fun onFailure(call: Call<PengajuanResponse>, t: Throwable) {
-
-                _pengajuanError.value = "error: ${t.message}"
+                val errorBodyString = t.message
+                ErrorHandler.handleErrorResponse(errorBodyString,
+                    onError = { message -> _pengajuanError.value = message },
+                    onAlert = { alert -> _alertEvent.value = alert }
+                )
                 _isLoading.value = false
             }
         })
@@ -78,14 +93,23 @@ class PengajuanViewModel: ViewModel() {
                 if (response.isSuccessful && response.body() != null) {
                     _cekUpdate.value = response.body()!!
                 } else {
-                    _cekUpdateError.value = "Kesalahan: ${response.code()}"
+                    val errorBodyString = response.errorBody()?.string()
+                    ErrorHandler.handleErrorResponse(errorBodyString,
+                        onError = { message -> _cekUpdateError.value = message },
+                        onAlert = { alert -> _alertEvent.value = alert }
+                    )
+
                 }
                 _isLoading.value = false
             }
 
             override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
 
-                _cekUpdateError.value = "Kesalahan: ${t.message}"
+                val errorBodyString = t.message
+                ErrorHandler.handleErrorResponse(errorBodyString,
+                    onError = { message -> _cekUpdateError.value = message },
+                    onAlert = { alert -> _alertEvent.value = alert }
+                )
                 _isLoading.value = false
             }
         })

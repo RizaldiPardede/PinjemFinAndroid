@@ -57,7 +57,7 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="6dp"
                 android:fontFamily="@font/poppins_bold"
-                android:text="Halo"
+                android:text="Halo Sobat PinjemFin"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
@@ -324,6 +324,16 @@
             android:layout_marginBottom="35dp"
             android:contentDescription="Logo"
             android:src="@drawable/logo_actionbar" />
+
+        <ImageView
+            android:id="@+id/notificationIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Notifikasi"
+            android:layout_marginBottom="45dp"
+            android:src="@drawable/baseline_notifications_none_24" />
 
     </androidx.appcompat.widget.Toolbar>
 

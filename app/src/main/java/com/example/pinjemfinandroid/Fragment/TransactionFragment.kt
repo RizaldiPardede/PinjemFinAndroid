@@ -14,7 +14,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.pinjemfinandroid.Activity.LoginActivity
 import com.example.pinjemfinandroid.Model.PengajuanRequest
 import com.example.pinjemfinandroid.R
+import com.example.pinjemfinandroid.Utils.AlertEvent
 import com.example.pinjemfinandroid.Utils.ConfirmationUtilsFlexible
+import com.example.pinjemfinandroid.Utils.LottieAlertHelper
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.ViewModel.PengajuanViewModel
 import com.example.pinjemfinandroid.databinding.FragmentTransactionBinding
@@ -38,6 +40,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private val binding get() = _binding!!
     private val pengajuanViewModel: PengajuanViewModel by activityViewModels()
+    private var currentPengajuan: PengajuanRequest? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -85,37 +88,38 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
                 )
             }
             else{
-                val pengajuan = PengajuanRequest(binding.etAmount.text.toString().toDouble(),binding.etTenor.text.toString().toInt())
+                currentPengajuan = PengajuanRequest(binding.etAmount.text.toString().toDouble(),binding.etTenor.text.toString().toInt())
                 preferenceHelper.getString("token")?.let {
                     pengajuanViewModel.cekUpdateAkun(it)
 
 
                 }
-                observeCekUpdateResult(pengajuan)
+
 
             }
 
         }
-
+        observeCekUpdateResult()
+        observealert()
         observePengajuanResult()
 
 
     }
 
-    fun observeCekUpdateResult(pengajuan: PengajuanRequest){
+    fun observeCekUpdateResult(){
 
-        pengajuanViewModel.cekUpdate.observe(viewLifecycleOwner, Observer {messageresponse->
-            preferenceHelper.getString("token")?.let {
-                pengajuanViewModel.postPengajuan(pengajuan,it)
-
-
+        pengajuanViewModel.cekUpdate.observe(viewLifecycleOwner) { messageresponse ->
+            currentPengajuan?.let { pengajuan ->
+                preferenceHelper.getString("token")?.let {
+                    pengajuanViewModel.postPengajuan(pengajuan, it)
+                }
             }
-            Toast.makeText(requireContext(),messageresponse.message,Toast.LENGTH_SHORT).show()
-        })
+            Toast.makeText(requireContext(), messageresponse.message, Toast.LENGTH_SHORT).show()
+        }
 
-        pengajuanViewModel.cekUpdateError.observe(viewLifecycleOwner, Observer{
-            Toast.makeText(requireContext(),it,Toast.LENGTH_SHORT).show()
-        })
+        pengajuanViewModel.cekUpdateError.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun observePengajuanResult(){
@@ -132,6 +136,23 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
         pengajuanViewModel.pengajuanError.observe(viewLifecycleOwner,Observer{
             Toast.makeText(requireContext(),it,Toast.LENGTH_SHORT).show()
         })
+    }
+    fun observealert(){
+        pengajuanViewModel.alertEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is AlertEvent.ShowSuccess -> {
+                    LottieAlertHelper.showSuccess(requireContext(),  event.message)
+
+                }
+                is AlertEvent.ShowError -> {
+                    LottieAlertHelper.showError(requireContext(), event.message)
+
+                }
+                AlertEvent.Dismiss -> {
+                    // Optional: bisa digunakan untuk dismiss manual
+                }
+            }
+        }
     }
 
     fun statisticPinjaman(token:String){

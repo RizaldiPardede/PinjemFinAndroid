@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.pinjemfinandroid.Network.ApiConfig
 import com.example.pinjemfinandroid.Model.GetProfileResponse
+import com.example.pinjemfinandroid.Utils.AlertEvent
+import com.example.pinjemfinandroid.Utils.ErrorHandler
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -35,6 +37,9 @@ class DokumenViewModel:  ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _alertEvent = MutableLiveData<AlertEvent>()
+    val alertEvent: LiveData<AlertEvent> = _alertEvent
+
     fun uploadImage(context: Context, imageUri: Uri, imageType: String, token: String) {
         val realPath = getRealPathFromUri(context, imageUri)
         val file = File(realPath)
@@ -50,14 +55,23 @@ class DokumenViewModel:  ViewModel() {
                 if (response.isSuccessful) {
                     val message = response.body()?.get("message") ?: "Upload berhasil"
                     _uploadResult.value = Result.success(message)
+                    _alertEvent.value = AlertEvent.ShowSuccess(message)
                 } else {
-                    _uploadError.value = "Upload gagal: ${response.code()}"
+                    val errorBodyString = response.errorBody()?.string()
+                    ErrorHandler.handleErrorResponse(errorBodyString,
+                        onError = { message -> _uploadError.value = message },
+                        onAlert = { alert -> _alertEvent.value = alert }
+                    )
                 }
                 _isLoading.value = false
             }
 
             override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
-                _uploadError.value = "Terjadi kesalahan: ${t.message}"
+                val errorBodyString = t.message
+                ErrorHandler.handleErrorResponse(errorBodyString,
+                    onError = { message -> _uploadError.value = message },
+                    onAlert = { alert -> _alertEvent.value = alert }
+                )
                 _isLoading.value = false
             }
         })

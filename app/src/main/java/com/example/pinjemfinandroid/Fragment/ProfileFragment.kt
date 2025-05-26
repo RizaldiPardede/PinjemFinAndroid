@@ -31,7 +31,9 @@ import com.example.pinjemfinandroid.Adapter.MenuAdapter
 import com.example.pinjemfinandroid.Local.UserRoomViewModel
 import com.example.pinjemfinandroid.Model.MenuModel
 import com.example.pinjemfinandroid.R
+import com.example.pinjemfinandroid.Utils.AlertEvent
 import com.example.pinjemfinandroid.Utils.ConfirmationUtils.showConfirmationDialog
+import com.example.pinjemfinandroid.Utils.LottieAlertHelper
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.ViewModel.DokumenViewModel
 import com.example.pinjemfinandroid.ViewModel.TokenNotifViewModel
@@ -136,7 +138,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        observealert()
         dataList = listOf(
             MenuModel("Profile Information", "Manage account details", R.drawable.baseline_account_circle_white),
             MenuModel("Plafon Information", "See Your Plafon here", R.drawable.baseline_credit_card_24),
@@ -391,5 +393,25 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
         binding.btnLogin.visibility = View.VISIBLE
         binding.btnLogoutAccount.visibility = View.GONE
     }
+
+    fun observealert(){
+        uploadImageViewModel.alertEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is AlertEvent.ShowSuccess -> {
+                    LottieAlertHelper.showSuccess(requireContext(),  event.message)
+
+                }
+                is AlertEvent.ShowError -> {
+                    LottieAlertHelper.showError(requireContext(), event.message)
+
+                }
+                AlertEvent.Dismiss -> {
+                    // Optional: bisa digunakan untuk dismiss manual
+                }
+            }
+        }
+    }
+
+
 
 }

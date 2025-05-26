@@ -71,6 +71,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.rvCardhome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         plafonViewModel.getAllPlafon()
         plafonsetup()
+        val nama = preferenceHelper.getString("username")
+        binding.tvUsername.text = "Halo "+nama
         binding.btnSimulasi.setOnClickListener {
             val amount = binding.etAmount.getCleanValue().toDouble()
             val tenor = binding.etTenor.text.toString().toIntOrNull()
@@ -203,4 +205,5 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             autoScrollHandler.removeCallbacks(autoScrollRunnable)
         }
     }
+
 }
