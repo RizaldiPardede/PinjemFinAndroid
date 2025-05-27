@@ -2,6 +2,7 @@ package com.example.pinjemfinandroid.Local
 
 import android.content.Context
 import androidx.room.Room
+import com.example.pinjemfinandroid.Local.dao.NotificationDao
 import com.example.pinjemfinandroid.Local.dao.UserDataDao
 import com.example.pinjemfinandroid.Local.database.AppDatabase
 import dagger.Module
@@ -29,5 +30,10 @@ object DatabaseModule {
     @Provides
     fun provideUserDataDao(db: AppDatabase): UserDataDao {
         return db.userDataDao()
+    }
+
+    @Provides
+    fun provideNotificationDao(db: AppDatabase): NotificationDao {
+        return db.notificationDao()
     }
 }

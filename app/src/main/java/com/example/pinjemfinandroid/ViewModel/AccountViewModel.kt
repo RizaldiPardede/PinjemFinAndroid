@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.pinjemfinandroid.Network.ApiConfig
 import com.example.pinjemfinandroid.Model.DetailCustomerRequest
 import com.example.pinjemfinandroid.Model.DetailCustomerResponse
+import com.example.pinjemfinandroid.Model.GetAllImageResponseItem
 import com.example.pinjemfinandroid.Utils.AlertEvent
 import com.example.pinjemfinandroid.Utils.ErrorHandler
 import retrofit2.Call
@@ -26,6 +27,12 @@ class AccountViewModel : ViewModel() {
 
     private val _alertEvent = MutableLiveData<AlertEvent>()
     val alertEvent: LiveData<AlertEvent> = _alertEvent
+
+    private val _getAllImageUrl = MutableLiveData<List<GetAllImageResponseItem?>?>()
+    val getAllImageUrl: LiveData<List<GetAllImageResponseItem?>?> = _getAllImageUrl
+
+    private val _getAllImageError = MutableLiveData<String>()
+    val getAllImageError: LiveData<String> = _getAllImageError
 
 
     fun addDetailAccount(detailcustomer: DetailCustomerRequest, token:String) {
@@ -55,6 +62,41 @@ class AccountViewModel : ViewModel() {
                 val errorBodyString = t.message
                 ErrorHandler.handleErrorResponse(errorBodyString,
                     onError = { message -> _addDetailError.value = message },
+                    onAlert = { alert -> _alertEvent.value = alert }
+                )
+                _isLoading.value = false
+            }
+        })
+    }
+
+
+    fun getAllImage(token:String) {
+
+        val call = ApiConfig.getAkunService(token).getAllImageCustomer()
+        _isLoading.value = true
+        call.enqueue(object : Callback<List<GetAllImageResponseItem?>?> {
+            override fun onResponse(
+                call: Call<List<GetAllImageResponseItem?>?>,
+                response: Response<List<GetAllImageResponseItem?>?>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    _getAllImageUrl.value = response.body()!!
+
+                } else {
+                    val errorBodyString = response.errorBody()?.string()
+                    ErrorHandler.handleErrorResponse(errorBodyString,
+                        onError = { message -> _getAllImageError.value = message },
+                        onAlert = { alert -> _alertEvent.value = alert }
+                    )
+                }
+                _isLoading.value = false
+            }
+
+            override fun onFailure(call: Call<List<GetAllImageResponseItem?>?>, t: Throwable) {
+
+                val errorBodyString = t.message
+                ErrorHandler.handleErrorResponse(errorBodyString,
+                    onError = { message -> _getAllImageError.value = message },
                     onAlert = { alert -> _alertEvent.value = alert }
                 )
                 _isLoading.value = false

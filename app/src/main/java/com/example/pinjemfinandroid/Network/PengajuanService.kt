@@ -1,6 +1,8 @@
 package com.example.pinjemfinandroid.Network
 
 import PengajuanResponseItem
+import com.example.pinjemfinandroid.Model.GetAllImageRequest
+import com.example.pinjemfinandroid.Model.GetAllImageResponseItem
 import com.example.pinjemfinandroid.Model.MessageResponse
 import com.example.pinjemfinandroid.Model.PengajuanRequest
 import com.example.pinjemfinandroid.Model.PengajuanResponse
@@ -24,4 +26,6 @@ interface PengajuanService {
 
     @GET("pengajuan/getAllPengajuan")
     fun getAllPengajuan(): Call<List<PengajuanResponseItem>>
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.pinjemfinandroid.Fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,12 +10,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.pinjemfinandroid.Activity.DashboardActivity
+import com.example.pinjemfinandroid.Activity.NotificationActivity
 import com.example.pinjemfinandroid.Adapter.PlafonAdapter
 import com.example.pinjemfinandroid.Adapter.PlafonHomeAdapter
 import com.example.pinjemfinandroid.Animation.Animation
+import com.example.pinjemfinandroid.Local.NotificationViewModel
 import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.Utils.RupiahFormatter
@@ -22,6 +27,7 @@ import com.example.pinjemfinandroid.Utils.RupiahFormatter
 import com.example.pinjemfinandroid.ViewModel.HomeViewModel
 import com.example.pinjemfinandroid.ViewModel.PlafonViewModel
 import com.example.pinjemfinandroid.databinding.FragmentHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,6 +40,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [HomeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -48,6 +55,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var currentPosition = 0
     private val autoScrollHandler = android.os.Handler()
     private lateinit var autoScrollRunnable: Runnable
+    private val notificationviewModel: NotificationViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -71,8 +79,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.rvCardhome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         plafonViewModel.getAllPlafon()
         plafonsetup()
+        notificationviewModel.refreshUnreadCount()
         val nama = preferenceHelper.getString("username")
-        binding.tvUsername.text = "Halo "+nama
+
+
+        binding.tvUsername.text = "Halo "+ nama
+
+
         binding.btnSimulasi.setOnClickListener {
             val amount = binding.etAmount.getCleanValue().toDouble()
             val tenor = binding.etTenor.text.toString().toIntOrNull()
@@ -119,6 +132,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewModel.registerError.observe(viewLifecycleOwner) { error ->
 
         }
+
+        binding.notificationContainer.setOnClickListener{
+            val intent = Intent(requireContext(), NotificationActivity::class.java)
+            startActivity(intent)
+        }
+        observeNotif()
         return binding.root
 
 
@@ -197,12 +216,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         if (::autoScrollRunnable.isInitialized) {
             autoScrollHandler.postDelayed(autoScrollRunnable, 3000)
         }
+        notificationviewModel.refreshUnreadCount()
     }
 
     override fun onPause() {
         super.onPause()
         if (::autoScrollRunnable.isInitialized) {
             autoScrollHandler.removeCallbacks(autoScrollRunnable)
+        }
+    }
+
+    fun observeNotif(){
+        lifecycleScope.launchWhenStarted {
+            notificationviewModel.unreadCount.collect { count ->
+                if (count > 0) {
+                    binding.notificationBadge.text = count.toString()
+                    binding.notificationBadge.visibility = View.VISIBLE
+                } else {
+                    binding.notificationBadge.visibility = View.GONE
+                }
+            }
         }
     }
 

@@ -3,29 +3,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.HistoryPengajuanFragment"
     android:orientation="vertical"
-    android:background="@color/pf_background"
-    >
+    android:background="@color/pf_primary">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/myToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/concave_toolbar_bg"
+
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+
+        >
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pengajuan"
+            android:layout_marginStart="10dp"
+            android:textSize="24sp"
+            android:fontFamily="@font/poppins_semibold"
+
+            android:textColor="@color/white"
+            />
+
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pengajuan Anda"
-        android:fontFamily="@font/poppins_bold"
-        android:textSize="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_pengajuan"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_height="match_parent"
 
+        android:paddingVertical="50dp"
+
+        android:layout_marginTop="50dp"
+        android:background="@drawable/base_shape"
         />
+
+
+
 
 </LinearLayout>

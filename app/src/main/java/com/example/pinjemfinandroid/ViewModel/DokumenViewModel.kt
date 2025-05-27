@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.pinjemfinandroid.Model.GetAllImageResponseItem
 import com.example.pinjemfinandroid.Network.ApiConfig
 import com.example.pinjemfinandroid.Model.GetProfileResponse
 import com.example.pinjemfinandroid.Utils.AlertEvent
@@ -39,6 +40,9 @@ class DokumenViewModel:  ViewModel() {
 
     private val _alertEvent = MutableLiveData<AlertEvent>()
     val alertEvent: LiveData<AlertEvent> = _alertEvent
+
+
+
 
     fun uploadImage(context: Context, imageUri: Uri, imageType: String, token: String) {
         val realPath = getRealPathFromUri(context, imageUri)
@@ -110,5 +114,7 @@ class DokumenViewModel:  ViewModel() {
             }
         })
     }
+
+
 
 }

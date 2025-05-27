@@ -17,10 +17,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.pinjemfinandroid.Local.UserRoomViewModel
 import com.example.pinjemfinandroid.Local.entity.UserData
 import com.example.pinjemfinandroid.Model.DetailCustomerRequest
 import com.example.pinjemfinandroid.Model.ProfileResponse
+import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.AlertEvent
 import com.example.pinjemfinandroid.Utils.LocationHelper
 import com.example.pinjemfinandroid.Utils.LottieAlertHelper
@@ -106,6 +108,8 @@ class AddDetailActivity : AppCompatActivity() {
         isLoading()
         observealert()
         userRoomViewModel.loadUsers()
+        preferenceHelper.getString("token")?.let { accountViewModel.getAllImage(it) }
+
 
         if (preferenceHelper.getString("token").isNullOrEmpty()){
 
@@ -178,6 +182,7 @@ class AddDetailActivity : AppCompatActivity() {
         observeRoom()
         observeprofileResult()
         observeAddDetailAccount()
+        observegetImageAccount()
 
     }
 
@@ -420,6 +425,48 @@ class AddDetailActivity : AppCompatActivity() {
             binding.buttonUploadKtp.visibility = View.VISIBLE
         }
         accountViewModel.addDetailError.observe(this){
+            Log.d("Error",it)
+        }
+    }
+
+    fun observegetImageAccount(){
+        accountViewModel.getAllImageUrl.observe(this){
+            if (it != null) {
+                it.forEachIndexed  { index, item ->
+                    if (item != null) {
+                        when(item.imageType){
+                            "KTP"->{
+                                binding.imageViewKtp.visibility = View.VISIBLE
+                                binding.buttonUploadKtp.visibility = View.VISIBLE
+                                Glide.with(this)
+                                .load(item.imageUrl)
+                                .into(binding.imageViewKtp)}
+                            "NPWP"->{
+                                binding.imageViewNpwp.visibility = View.VISIBLE
+                                binding.buttonUploadNpwp.visibility = View.VISIBLE
+                                Glide.with(this)
+                                .load(item.imageUrl)
+                                .into(binding.imageViewNpwp)}
+                            "Kartu_Keluarga"->{
+                                binding.imageViewKk.visibility = View.VISIBLE
+                                binding.buttonUploadKk.visibility = View.VISIBLE
+                                Glide.with(this)
+                                .load(item.imageUrl)
+                                .into(binding.imageViewKk)}
+                            "Selfie_KTP"->{
+                                binding.imageViewSelfieKtp.visibility = View.VISIBLE
+                                binding.buttonUploadSelfieKtp.visibility = View.VISIBLE
+                                Glide.with(this)
+                                .load(item.imageUrl)
+                                .into(binding.imageViewSelfieKtp)}
+                        }
+                    }
+
+                }
+            }
+
+        }
+        accountViewModel.getAllImageError.observe(this){
             Log.d("Error",it)
         }
     }

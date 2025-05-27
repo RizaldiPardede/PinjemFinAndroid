@@ -28,6 +28,7 @@ import com.example.pinjemfinandroid.Activity.GantiPasswordActivity
 import com.example.pinjemfinandroid.Activity.LoginActivity
 import com.example.pinjemfinandroid.Activity.PlafonActivity
 import com.example.pinjemfinandroid.Adapter.MenuAdapter
+import com.example.pinjemfinandroid.Local.NotificationViewModel
 import com.example.pinjemfinandroid.Local.UserRoomViewModel
 import com.example.pinjemfinandroid.Model.MenuModel
 import com.example.pinjemfinandroid.R
@@ -66,6 +67,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
     private val userRoomViewModel: UserRoomViewModel by viewModels()
     private var photoUri: Uri? = null
 //    private lateinit var uploadImageViewModel: DokumenViewModel
+    private val notificationviewModel: NotificationViewModel by viewModels()
     private val uploadImageViewModel: DokumenViewModel by activityViewModels()
     private val tokenNotifViewModel: TokenNotifViewModel by activityViewModels()
     private val cameraLauncher =
@@ -375,10 +377,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
             it.message?.let { it1 -> Log.d("Token Notifikasi", it1) }
             preferenceHelper.clear()
             userRoomViewModel.clearUsers()
+            notificationviewModel.deleteAllNotifications()
             startActivity(Intent(requireContext(),LoginActivity::class.java))
         }
 
         tokenNotifViewModel.cleanTokenError.observe(viewLifecycleOwner){
+            0
             it.let { it1 -> Log.d("Token Notifikasi", it1) }
         }
     }

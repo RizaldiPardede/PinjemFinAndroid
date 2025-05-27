@@ -13,8 +13,9 @@ import java.util.Locale
 
 class PengajuanAdapter(private var list: List<PengajuanResponseItem?>) :
     RecyclerView.Adapter<PengajuanAdapter.PengajuanViewHolder>() {
-
+    private var fullList: List<PengajuanResponseItem?> = list
     fun updateData(newData: List<PengajuanResponseItem>) {
+        this.fullList = newData
         this.list = newData
         notifyDataSetChanged()
     }
@@ -38,18 +39,39 @@ class PengajuanAdapter(private var list: List<PengajuanResponseItem?>) :
         val amountFormatted = NumberFormat.getCurrencyInstance(Locale("in", "ID")).format(amount)
 
         if (item != null) {
-            holder.tv_pinjaman.text = "Rp. ${item.amount}"
+            holder.tv_pinjaman.text = "Rp. $amountFormatted"
         }
         when(item?.status ?: "-"){
-            "bckt_marketing"->{holder.tvStatus.text = "Status: in Review"}
-            "bckt_BranchManager"->{holder.tvStatus.text = "Status: in Review"}
-            "bckt_Operation"->{holder.tvStatus.text = "Status: Approve"}
-            "Disbursment"->{holder.tvStatus.text = "Status: Disburse"}
-            "tolak"->{holder.tvStatus.text = "Status: Rejected"}
+            "bckt_marketing"->{holder.tvStatus.text = "Status: in Review"
+                holder.tvStatus.setBackgroundResource(R.drawable.baseline_inreview)
+            }
+            "bckt_BranchManager"->{
+                holder.tvStatus.setBackgroundResource(R.drawable.baseline_inreview)
+                holder.tvStatus.text = "Status: in Review"}
+            "bckt_Operation"->{
+                holder.tvStatus.setBackgroundResource(R.drawable.baseline_aprove)
+                holder.tvStatus.text = "Status: Approve"}
+            "Disbursment"->{
+                holder.tvStatus.setBackgroundResource(R.drawable.baseline_aprove)
+                holder.tvStatus.text = "Status: Disburse"}
+            "tolak"->{
+                holder.tvStatus.setBackgroundResource(R.drawable.baseline_tolak)
+                holder.tvStatus.text = "Status: Rejected"}
         }
 
-        holder.tv_tenor.text = "Jumlah: $amountFormatted"
+        if (item != null) {
+            holder.tv_tenor.text = "${item.tenor} Bulan"
+        }
     }
 
     override fun getItemCount(): Int = list.size
+
+    fun filterByStatus(status: String) {
+        list = if (status == "ALL") {
+            fullList
+        } else {
+            fullList.filter { it?.status == status }
+        }
+        notifyDataSetChanged()
+    }
 }
