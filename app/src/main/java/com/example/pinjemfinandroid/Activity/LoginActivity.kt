@@ -16,6 +16,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.example.pinjemfinandroid.Animation.Animation
+import com.example.pinjemfinandroid.Local.NotificationViewModel
 import com.example.pinjemfinandroid.Local.UserRoomViewModel
 import com.example.pinjemfinandroid.Local.dao.UserDataDao
 import com.example.pinjemfinandroid.Local.entity.UserData
@@ -42,10 +43,14 @@ class LoginActivity : AppCompatActivity() {
     private val authViewModel: AuthViewModel by viewModels()
     private val userRoomViewModel: UserRoomViewModel by viewModels()
     private lateinit var preferenceHelper: PreferenceHelper
-
+    private val notificationviewModel: NotificationViewModel by viewModels()
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
     private val RC_SIGN_IN = 9001
+    var emailForLoginGoogle: String? = null
+    var usernameForLoginGoogle: String? = null
+    private var pendingIdToken: String? = null
+
 
     @Inject
     lateinit var userDataDao: UserDataDao
@@ -61,6 +66,9 @@ class LoginActivity : AppCompatActivity() {
         forgotpassword()
         preferenceHelper = PreferenceHelper(this)
         auth = FirebaseAuth.getInstance()
+        preferenceHelper.clear()
+        userRoomViewModel.clearUsers()
+        notificationviewModel.deleteAllNotifications()
 
         binding.buttonsignup.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
@@ -68,40 +76,12 @@ class LoginActivity : AppCompatActivity() {
 
         binding.buttonloggin.setOnClickListener {
             authViewModel.PostLoginUser(binding.etEmail.text.toString(),binding.etPassword.text.toString())
-            // Observasi hasil pendaftaran
-            authViewModel.loginResult.observe(this) { tokenResponse ->
-                if (tokenResponse.token.isNullOrEmpty()){
-
-                    Toast.makeText(this, "Akun Belum diverifikasi", Toast.LENGTH_SHORT).show()
-                }
-
-                else{
-                    tokenResponse?.let {
-
-                        Toast.makeText(this, "Logoin Successful!", Toast.LENGTH_SHORT).show()
-                        it.token?.let { it1 -> preferenceHelper.setString("token", it1) }
-                        it.token?.let { it1 ->
-                            authViewModel.getProfile(it1)
-                            authViewModel.getUser(it1)
-                        }
-
-                        //taruh disini untuk get profile
-
-                    }
-                }
-
-            }
-
-            authViewModel.loginError.observe(this) { errorMessage ->
-                // Ketika gagal
-                errorMessage?.let {
-                    Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
 
         }
-        observeForRoom()
+        observeLoginResult()
+        observeloginGoogle()
         observeEmailPassword()
+        observeForRoom()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))  // pastikan sudah ada di strings.xml
             .requestEmail()
@@ -114,19 +94,23 @@ class LoginActivity : AppCompatActivity() {
 
         authViewModel.cekEmailResult.observe(this) {
             if (it.message == "Email already used") {
-                FirebaseAuth.getInstance().currentUser?.getIdToken(false)
-                    ?.addOnCompleteListener { task ->
-                        val firebaseToken = task.result?.token
-                        firebaseToken?.let { token ->
-                            authViewModel.PostLoginWithGoogleUser(token)
-                            FirebaseAuth.getInstance().currentUser?.let { it1 ->
-                                it1.displayName?.let { it2 -> it1.email?.let { it3 ->
-                                    observeloginGoogle(
-                                        it3, it2)
-                                } }
-                            }
-                        }
-                    }
+//                pendingIdToken?.let { it1 -> firebaseAuthWithGoogle(it1) }
+//                FirebaseAuth.getInstance().currentUser?.getIdToken(false)
+//                    ?.addOnCompleteListener { task ->
+//                        val firebaseToken = task.result?.token
+//                        firebaseToken?.let { token ->
+//                            authViewModel.PostLoginWithGoogleUser(token)
+//                            FirebaseAuth.getInstance().currentUser?.let { it1 ->
+//                                it1.displayName?.let { it2 -> it1.email?.let { it3 ->
+//                                    usernameForLoginGoogle = it2
+//                                    emailForLoginGoogle = it3
+//                                } }
+//                            }
+//                        }
+//                    }
+                pendingIdToken?.let { token ->
+                    firebaseAuthWithGoogle(token)
+                }
             } else if (it.message == "Can Register") {
                 val intent = Intent(this, CreatePasswordAuthGoogleActivity::class.java)
                 intent.putExtra("firebaseEmail", FirebaseAuth.getInstance().currentUser?.email)
@@ -139,9 +123,44 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signInGoogle() {
+        auth.signOut()
+        preferenceHelper.clear()
         googleSignInClient.signOut().addOnCompleteListener {
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
+    }
+
+    private fun observeLoginResult() {
+        // Observasi hasil pendaftaran
+        authViewModel.loginResult.observe(this) { tokenResponse ->
+            if (tokenResponse.token.isNullOrEmpty()){
+
+                Toast.makeText(this, "Akun Belum diverifikasi", Toast.LENGTH_SHORT).show()
+            }
+
+            else{
+                tokenResponse?.let {
+
+                    Toast.makeText(this, "Logoin Successful!", Toast.LENGTH_SHORT).show()
+                    it.token?.let { it1 -> preferenceHelper.setString("token", it1) }
+                    it.token?.let { it1 ->
+                        authViewModel.getProfile(it1)
+                        authViewModel.getUser(it1)
+                    }
+
+                    //taruh disini untuk get profile
+
+                }
+            }
+
+        }
+
+        authViewModel.loginError.observe(this) { errorMessage ->
+            // Ketika gagal
+            errorMessage?.let {
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+            }
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -152,10 +171,10 @@ class LoginActivity : AppCompatActivity() {
             try {
                 val account = task.getResult(ApiException::class.java)!!
                 val email = account.email
+                pendingIdToken = account.idToken
                 if (email != null) {
                     authViewModel.PostCekEmail(email)
                 }
-                firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 // Google Sign In failed
                 Log.w("LoginActivity", "Google sign in failed", e)
@@ -168,27 +187,33 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
                     val user = auth.currentUser
-                    Log.d("LoginActivity", "signInWithCredential:success. User: ${user?.email}")
-                    // Bisa lanjut ke main activity
+                    user?.getIdToken(false)?.addOnCompleteListener { tokenTask ->
+                        val firebaseToken = tokenTask.result?.token
+                        firebaseToken?.let { token ->
+                            authViewModel.PostLoginWithGoogleUser(token)
+
+                            // Simpan email & username jika perlu
+                            user.displayName?.let { usernameForLoginGoogle = it }
+                            user.email?.let { emailForLoginGoogle = it }
+                        }
+                    }
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w("LoginActivity", "signInWithCredential:failure", task.exception)
                 }
             }
     }
 
-    private fun observeloginGoogle(email: String,username:String){
+    private fun observeloginGoogle(){
 
         authViewModel.loginGoogleResult.observe(this){
 
-            it.token?.let { it1 -> preferenceHelper.setString("token", it1)
-            preferenceHelper.setString("email",email)
-                preferenceHelper.setString("username",username)
-            }
+            it.token?.let { it1 -> preferenceHelper.setString("token", it1) }
 
             it.token?.let { it1 -> authViewModel.getProfile(it1) }
+
+            emailForLoginGoogle?.let { it2 -> preferenceHelper.setString("email", it2) }
+            usernameForLoginGoogle?.let { it2 -> preferenceHelper.setString("username", it2) }
 
         }
 
@@ -211,6 +236,7 @@ class LoginActivity : AppCompatActivity() {
                     // Insert ke database Room (jalan di background thread)
                     lifecycleScope.launch {
                         if (entity != null) {
+                            userDataDao.clearAll()
                             userDataDao.insertUser(entity)
                             Log.d("RoomInsert", "Data berhasil dimasukkan ke Room: ${entity.nama}")
                             startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))

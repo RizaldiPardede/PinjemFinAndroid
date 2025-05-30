@@ -42,7 +42,7 @@ class PreferenceHelper(context: Context) {
 
     // Hapus semua data
     fun clear() {
-        sharedPref.edit().clear().apply()
+        sharedPref.edit().clear().commit()
     }
 
 }

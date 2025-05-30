@@ -17,6 +17,7 @@ import com.example.pinjemfinandroid.Adapter.ViewPagerAdapter
 import com.example.pinjemfinandroid.databinding.ActivityDashboardBinding
 import com.example.pinjemfinandroid.Fragment.HomeFragment
 import com.example.pinjemfinandroid.Fragment.ProfileFragment
+import com.example.pinjemfinandroid.Fragment.SharedViewModel
 import com.example.pinjemfinandroid.Fragment.TransactionFragment
 import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
@@ -38,6 +39,8 @@ class DashboardActivity : AppCompatActivity() {
     private val pengajuanViewModel: PengajuanViewModel by viewModels()
     private val homeviewModel: HomeViewModel by viewModels()
     private val uploadImageViewModel: DokumenViewModel by viewModels()
+    val sharedViewModel: SharedViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +74,7 @@ class DashboardActivity : AppCompatActivity() {
         tokenNotifViewModel.addTokenError.observe(this){
             it.let { it1 -> Log.d("Token Notifikasi", it1) }
         }
+
 
     }
 

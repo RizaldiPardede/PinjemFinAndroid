@@ -2,6 +2,7 @@ package com.example.pinjemfinandroid.Local
 
 import android.content.Context
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.example.pinjemfinandroid.Local.dao.NotificationDao
 import com.example.pinjemfinandroid.Local.dao.UserDataDao
 import com.example.pinjemfinandroid.Local.database.AppDatabase
@@ -36,4 +37,6 @@ object DatabaseModule {
     fun provideNotificationDao(db: AppDatabase): NotificationDao {
         return db.notificationDao()
     }
+
+
 }

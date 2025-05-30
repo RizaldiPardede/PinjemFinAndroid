@@ -2,12 +2,15 @@ package com.example.pinjemfinandroid.Fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +21,7 @@ import com.example.pinjemfinandroid.Utils.AlertEvent
 import com.example.pinjemfinandroid.Utils.ConfirmationUtilsFlexible
 import com.example.pinjemfinandroid.Utils.LottieAlertHelper
 import com.example.pinjemfinandroid.Utils.PreferenceHelper
+import com.example.pinjemfinandroid.Utils.RupiahFormatter
 import com.example.pinjemfinandroid.ViewModel.PengajuanViewModel
 import com.example.pinjemfinandroid.databinding.FragmentTransactionBinding
 
@@ -48,6 +52,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
             param2 = it.getString(ARG_PARAM2)
         }
 
+
         preferenceHelper = PreferenceHelper(requireContext())
     }
 
@@ -58,10 +63,16 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
         _binding = FragmentTransactionBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         observeDatafromHome()
+        ViewCompat.setZ(binding.linearLayoutCard, 2f)
+        ViewCompat.setZ(binding.linearlayoutinformasi, 1f)
         val token = preferenceHelper.getString("token")
         if (token != null) {
             pengajuanViewModel.getInformasiPlafonCustomer(token)
         }
+
+        ContextCompat.getDrawable(requireContext(), R.drawable.custom_thumb2)
+            ?.let { binding.sliderTenor.setCustomThumbDrawable(it) }
+
         return binding.root
     }
 
@@ -69,6 +80,36 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
         super.onViewCreated(view, savedInstanceState)
 
 //        pengajuanViewModel = ViewModelProvider(this).get(PengajuanViewModel::class.java)
+        binding.sliderTenor.addOnChangeListener { slider, value, fromUser ->
+            binding.etTenor.setText(value.toInt().toString())
+        }
+        var isEditing = false
+
+        binding.etTenor.doAfterTextChanged { editable ->
+            if (isEditing) return@doAfterTextChanged
+
+            val editText = binding.etTenor
+            val text = editable.toString()
+
+            val input = text.toIntOrNull()
+            if (input != null) {
+                val clampedValue = input.coerceIn(1, 12)
+                val clampedText = clampedValue.toString()
+
+                if (text != clampedText) {
+                    isEditing = true
+                    val selectionStart = editText.selectionStart
+
+                    editText.setText(clampedText)
+                    val newSelection = selectionStart.coerceAtMost(clampedText.length)
+                    editText.setSelection(newSelection)
+
+                    isEditing = false
+                }
+            }
+        }
+
+
 
         preferenceHelper.getString("token")?.let { statisticPinjaman(it) }
         binding.btnAjukan.setOnClickListener {
@@ -88,7 +129,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
                 )
             }
             else{
-                currentPengajuan = PengajuanRequest(binding.etAmount.text.toString().toDouble(),binding.etTenor.text.toString().toInt())
+                currentPengajuan = PengajuanRequest(binding.etAmount.getCleanValue().toDouble(),binding.etTenor.text.toString().toInt())
                 preferenceHelper.getString("token")?.let {
                     pengajuanViewModel.cekUpdateAkun(it)
 
@@ -125,11 +166,14 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
     fun observePengajuanResult(){
         pengajuanViewModel.pengajuanResponse.observe(viewLifecycleOwner,Observer{
             binding.linearLayoutKalkulasi.visibility = View.VISIBLE
-            binding.tvAngsuran.text = it.angsuran.toString()
+//            binding.tvAngsuran.text = it.angsuran.toString()
+            binding.tvAngsuran.text = RupiahFormatter.format(it.angsuran.toString().toDouble())
+
             binding.tvBunga.text = it.bunga.toString()
-            binding.tvTotalPayment.text = it.totalPayment.toString()
+            binding.tvTotalPayment.text = RupiahFormatter.format(it.totalPayment.toString().toDouble())
             binding.tvTenor.text = it.tenor.toString()
             binding.tvPinjaman.text = it.tenor.toString()
+            sharedViewModel.notifyRefresh()
 
         })
 
@@ -158,10 +202,14 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
     fun statisticPinjaman(token:String){
 
         pengajuanViewModel.informasiPengajuan.observe(viewLifecycleOwner, Observer {
-            binding.tvJumlahPlafon.text = it.jumlahPlafon.toString()
-            binding.tvSisaPlafon.text = it.sisaPlafon.toString()
-            binding.tvPinjamanlunas.text = it.jumlahPinjamanLunas.toString()
-            binding.tvPinjamansekarang.text = it.jumlahPinjaman.toString()
+//            binding.tvJumlahPlafon.text = it.jumlahPlafon.toString()
+            binding.tvJumlahPlafon.text = it.jumlahPlafon?.let { it1 -> RupiahFormatter.format(it1) }
+            binding.tvSisaPlafon.text = it.sisaPlafon?.let { it1 -> RupiahFormatter.format(it1) }
+//                it.sisaPlafon.toString()
+            binding.tvPinjamanlunas.text = it.jumlahPinjamanLunas?.let { it1 ->RupiahFormatter.format(it1) }
+//                it.jumlahPinjamanLunas.toString()
+            binding.tvPinjamansekarang.text = it.jumlahPinjaman?.let { it1 -> RupiahFormatter.format(it1) }
+//                it.jumlahPinjaman.toString()
 
             val progress = it.persentasilvup
             binding.progressBar.progress= progress.toString().toDouble().toInt()
@@ -212,7 +260,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
 
     fun observeDatafromHome(){
         sharedViewModel.amount.observe(viewLifecycleOwner) { amount ->
-            binding.etAmount.setText(amount.toString())
+            binding.etAmount.setCleanValue(amount)
             val scrollView = binding.vScrollView
             val targetLayout = binding.linearPengajuan
             scrollView.post {
@@ -226,4 +274,6 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
             binding.etTenor.setText(tenor.toString())
         }
     }
+
+
 }

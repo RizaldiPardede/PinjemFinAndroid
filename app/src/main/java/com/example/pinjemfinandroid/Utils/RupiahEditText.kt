@@ -74,4 +74,11 @@ class RupiahEditText @JvmOverloads constructor(
             .trim()
         return clean.toLongOrNull() ?: 0L
     }
+
+    fun setCleanValue(value: Double) {
+        val formatted = formatRupiah(value.toString())
+        current = formatted // supaya tidak masuk ke if (s.toString() != current)
+        setText(formatted)
+        setSelection(formatted.length)
+    }
 }

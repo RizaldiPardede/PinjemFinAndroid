@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pinjemfinandroid.Adapter.PlafonAdapter
 import com.example.pinjemfinandroid.Model.ListPlafonResponseItem
+import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.Utils.combineLoading
 import com.example.pinjemfinandroid.ViewModel.PlafonViewModel
 
@@ -18,14 +19,15 @@ class PlafonActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlafonBinding
     private lateinit var plafonAdapter: PlafonAdapter
     private val plafonViewModel:PlafonViewModel by viewModels()
+    private lateinit var preferenceHelper: PreferenceHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlafonBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.rvListplafon.layoutManager = LinearLayoutManager(this)
-
-        plafonViewModel.getAllPlafon()
+        preferenceHelper = PreferenceHelper(this)
+         plafonViewModel.getAllPlafon()
         plafonViewModel.getAllPlafonResult.observe(this){
             plafonAdapter = PlafonAdapter(it)
             binding.rvListplafon.adapter = plafonAdapter

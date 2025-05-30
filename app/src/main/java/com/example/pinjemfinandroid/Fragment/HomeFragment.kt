@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.ViewCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -77,7 +78,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         ViewCompat.setZ(binding.shapeprofile, 1f)
         binding.btnSimulasi.backgroundTintList = null
         binding.rvCardhome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        plafonViewModel.getAllPlafon()
+         plafonViewModel.getAllPlafon()
         plafonsetup()
         notificationviewModel.refreshUnreadCount()
         val nama = preferenceHelper.getString("username")
@@ -121,7 +122,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.tvTenor.text = result.tenor.toString()
             binding.tvTotalPayment.text = result.total_payment?.let { RupiahFormatter.format(it) }
             val scrollView = binding.vScrollView
-            val targetLayout = binding.linHasilSimulasi
+            val targetLayout = binding.btnAjukan
             scrollView.post {
                 scrollView.smoothScrollTo(0, targetLayout.top)
                 targetLayout.requestFocus()
@@ -141,6 +142,38 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         return binding.root
 
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.sliderTenor.addOnChangeListener { slider, value, fromUser ->
+            binding.etTenor.setText(value.toInt().toString())
+        }
+        var isEditing = false
+
+        binding.etTenor.doAfterTextChanged { editable ->
+            if (isEditing) return@doAfterTextChanged
+
+            val editText = binding.etTenor
+            val text = editable.toString()
+
+            val input = text.toIntOrNull()
+            if (input != null) {
+                val clampedValue = input.coerceIn(1, 12)
+                val clampedText = clampedValue.toString()
+
+                if (text != clampedText) {
+                    isEditing = true
+                    val selectionStart = editText.selectionStart
+
+                    editText.setText(clampedText)
+                    val newSelection = selectionStart.coerceAtMost(clampedText.length)
+                    editText.setSelection(newSelection)
+
+                    isEditing = false
+                }
+            }
+        }
+        super.onViewCreated(view, savedInstanceState)
     }
 
     companion object {

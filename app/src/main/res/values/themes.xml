@@ -1,11 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.PinjemFinAndroid" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.PinjemFinAndroid" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
          <item name="colorPrimary">@color/bca_dark</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.MyApp.MediumComponent</item>
+        <item name="textInputStyle">@style/Widget.MyApp.TextInputLayout.OutlinedBox</item>
     </style>
 
 
     <style name="Theme.PinjemFinAndroid" parent="Base.Theme.PinjemFinAndroid" />
+
+     ShapeAppearance dengan corner radius 12dp
+    <style name="ShapeAppearance.MyApp.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">12dp</item>
+    </style>
+
 </resources>

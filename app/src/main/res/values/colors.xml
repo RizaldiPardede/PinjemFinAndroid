@@ -37,4 +37,8 @@
     <!-- Optional Button Hover or Pressed State -->
     <color name="pf_primary_dark">#004AAD</color>
     <color name="pf_second_dark">#005FDF</color>
+
+
+
+    <color name="pf_divider">#E0E0E0</color>
 </resources>

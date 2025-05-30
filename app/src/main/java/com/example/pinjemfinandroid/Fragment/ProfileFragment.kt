@@ -39,6 +39,9 @@ import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.ViewModel.DokumenViewModel
 import com.example.pinjemfinandroid.ViewModel.TokenNotifViewModel
 import com.example.pinjemfinandroid.databinding.FragmentProfileBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +62,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
     private var param1: String? = null
     private var param2: String? = null
     private var _binding: FragmentProfileBinding? = null
+    private lateinit var googleSignInClient: GoogleSignInClient
     private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MenuAdapter
@@ -70,6 +74,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
     private val notificationviewModel: NotificationViewModel by viewModels()
     private val uploadImageViewModel: DokumenViewModel by activityViewModels()
     private val tokenNotifViewModel: TokenNotifViewModel by activityViewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val cameraLauncher =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
             if (isSuccess) {
@@ -97,7 +102,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
 
+        googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
         preferenceHelper = PreferenceHelper(requireContext())
     }
 
@@ -115,6 +125,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
         }
         binding.btnLogin.setOnClickListener {
             startActivity(Intent(requireContext(),LoginActivity::class.java))
+            activity?.finish()
         }
         binding.btnLogoutAccount.setOnClickListener{
 
@@ -375,10 +386,36 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
 
         tokenNotifViewModel.cleanTokenResult.observe(viewLifecycleOwner){
             it.message?.let { it1 -> Log.d("Token Notifikasi", it1) }
-            preferenceHelper.clear()
-            userRoomViewModel.clearUsers()
-            notificationviewModel.deleteAllNotifications()
-            startActivity(Intent(requireContext(),LoginActivity::class.java))
+
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            if (firebaseUser != null) {
+                // Cek apakah user login via Google
+                val isGoogleUser = firebaseUser.providerData.any { it.providerId == "google.com" }
+
+                if (isGoogleUser) {
+                    googleSignInClient.signOut().addOnCompleteListener {
+                        preferenceHelper.clear()
+                        userRoomViewModel.clearUsers()
+                        notificationviewModel.deleteAllNotifications()
+                        startActivity(Intent(requireContext(),LoginActivity::class.java))
+                        requireActivity().finishAffinity()
+                    }
+                } else {
+                    preferenceHelper.clear()
+                    userRoomViewModel.clearUsers()
+                    notificationviewModel.deleteAllNotifications()
+                    startActivity(Intent(requireContext(),LoginActivity::class.java))
+                    requireActivity().finishAffinity()
+                }
+            } else {
+                // User null, langsung cleanup
+                preferenceHelper.clear()
+                userRoomViewModel.clearUsers()
+                notificationviewModel.deleteAllNotifications()
+                startActivity(Intent(requireContext(),LoginActivity::class.java))
+                requireActivity().finishAffinity()
+            }
+
         }
 
         tokenNotifViewModel.cleanTokenError.observe(viewLifecycleOwner){
@@ -415,6 +452,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
             }
         }
     }
+
+
 
 
 

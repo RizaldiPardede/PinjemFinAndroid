@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.PinjemFinAndroid" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.PinjemFinAndroid" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/bca_dark</item>
         <item name="android:windowBackground">@android:color/white</item>

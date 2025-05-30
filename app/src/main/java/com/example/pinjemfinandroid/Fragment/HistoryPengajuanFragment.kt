@@ -1,6 +1,10 @@
 package com.example.pinjemfinandroid.Fragment
 
 import PengajuanResponseItem
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pinjemfinandroid.Adapter.PengajuanAdapter
 import com.example.pinjemfinandroid.R
@@ -36,7 +41,7 @@ class HistoryPengajuanFragment : Fragment(R.layout.fragment_history_pengajuan) {
     private lateinit var adapter: PengajuanAdapter
     private val pengajuanViewModel: PengajuanViewModel by activityViewModels()
     private lateinit var preferenceHelper: PreferenceHelper
-
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +77,16 @@ class HistoryPengajuanFragment : Fragment(R.layout.fragment_history_pengajuan) {
         pengajuanViewModel.ListpengajuanResult.observe(viewLifecycleOwner){
             adapter.updateData(it)
         }
+
+        sharedViewModel.refreshHistory.observe(viewLifecycleOwner) {
+            token?.let {
+                pengajuanViewModel.getAllPengajuan(it)
+            }
+        }
+
+
+
+
         return binding.root
     }
 
@@ -93,5 +108,23 @@ class HistoryPengajuanFragment : Fragment(R.layout.fragment_history_pengajuan) {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    private val refreshReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            // trigger refresh misal panggil fetchData di ViewModel
+            preferenceHelper.getString("token")?.let { pengajuanViewModel.getAllPengajuan(it) }
+        }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(refreshReceiver, IntentFilter("refresh-ui"))
+    }
+
+    override fun onStop() {
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(refreshReceiver)
+        super.onStop()
     }
 }

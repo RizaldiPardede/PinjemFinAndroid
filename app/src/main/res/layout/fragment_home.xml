@@ -133,7 +133,9 @@
                             android:background="@drawable/reactangleinputext"
                             android:hint="Rp 0"
                             android:inputType="number"
-                            android:padding="5dp" />
+                            android:padding="5dp"
+                            android:drawableLeft="@drawable/baseline_payment_24"
+                            />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -146,13 +148,58 @@
 
                         </TextView>
 
-                        <EditText
-                            android:id="@+id/et_tenor"
+<!--                        <EditText-->
+<!--                            android:id="@+id/et_tenor"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="30dp"-->
+<!--                            android:background="@drawable/reactangleinputext"-->
+<!--                            android:inputType="number"-->
+<!--                            android:padding="5dp"-->
+<!--                            android:drawableLeft = "@drawable/baseline_calendar_month_24"-->
+<!--                            />-->
+
+                        <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:background="@drawable/reactangleinputext"
-                            android:inputType="number"
-                            android:padding="5dp" />
+                            android:layout_height="30dp">
+
+                            <EditText
+                                android:id="@+id/et_tenor"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:paddingEnd="50dp"
+                                android:inputType="number"
+                                android:background="@drawable/reactangleinputext"
+                                android:padding="5dp"
+                                android:textColor="@android:color/black"
+                                android:textColorHint="#888888"
+                                android:drawableLeft = "@drawable/baseline_calendar_month_24"
+                                />
+
+                            <TextView
+                                android:id="@+id/tv_suffix"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end|center_vertical"
+                                android:text="/Bulan"
+                                android:textColor="#888888"
+                                android:paddingEnd="10dp"
+                                android:gravity="center_vertical"/>
+                        </FrameLayout>
+
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/slider_tenor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginStart="-5dp"
+                            android:stepSize="1"
+                            android:value="1"
+                            android:valueFrom="1"
+                            android:valueTo="12"
+                            app:thumbColor="@color/pf_primary"
+                            app:thumbRadius="7dp"
+                            app:trackHeight="4dp" />
 
                         <Button
                             android:id="@+id/btn_simulasi"
@@ -168,130 +215,143 @@
 
                     </LinearLayout>
 
+
                     <LinearLayout
                         android:id="@+id/lin_hasilSimulasi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="60dp"
-                        android:background="@drawable/shape_card"
-                        android:elevation="8dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="100dp"
                         android:orientation="vertical"
-                        android:padding="30dp"
+                        android:padding="20dp"
+                        android:background="@drawable/bg_receipt"
+                        android:elevation="4dp"
                         android:visibility="gone">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
                             android:text="Hasil Simulasi"
+                            android:textSize="14sp"
                             android:textColor="@color/pf_text_primary"
-                            android:textSize="12sp"
+                            android:fontFamily="@font/poppins_bold"
+                            android:layout_gravity="center_horizontal"
+                            android:paddingBottom="12dp"/>
 
-                            />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:background="@color/pf_divider"
+                            android:layout_marginBottom="8dp"/>
+
+
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_semibold"
                             android:text="Pinjaman"
-                            android:textColor="@color/pf_text_primary"
-                            android:textSize="12sp" />
-
+                            android:textSize="12sp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:textColor="@color/pf_text_secondary"/>
                         <TextView
                             android:id="@+id/tv_pinjaman"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="Rp 0"
+                            android:textAlignment="textEnd"
+                            android:textSize="13sp"
                             android:fontFamily="@font/poppins_medium"
-                            android:paddingStart="10dp"
-                            android:text="IDR 000.000.000"
                             android:textColor="@color/pf_text_primary"
-                            android:textSize="12sp" />
+                            android:paddingBottom="8dp"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_semibold"
                             android:text="Angsuran"
-                            android:textColor="@color/pf_text_primary"
-                            android:textSize="12sp" />
-
+                            android:textSize="12sp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:textColor="@color/pf_text_secondary"/>
                         <TextView
                             android:id="@+id/tv_angsuran"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="Rp 0"
+                            android:textAlignment="textEnd"
+                            android:textSize="13sp"
                             android:fontFamily="@font/poppins_medium"
-                            android:paddingStart="10dp"
-                            android:text="IDR 000.000.000"
                             android:textColor="@color/pf_text_primary"
-                            android:textSize="12sp" />
+                            android:paddingBottom="8dp"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_semibold"
                             android:text="Tenor"
-                            android:textColor="@color/pf_text_primary"
-                            android:textSize="12sp" />
-
+                            android:textSize="12sp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:textColor="@color/pf_text_secondary"/>
                         <TextView
                             android:id="@+id/tv_tenor"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_medium"
-                            android:paddingStart="10dp"
                             android:text="12 Bulan"
+                            android:textAlignment="textEnd"
+                            android:textSize="13sp"
+                            android:fontFamily="@font/poppins_medium"
                             android:textColor="@color/pf_text_primary"
-                            android:textSize="12sp" />
+                            android:paddingBottom="8dp"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_semibold"
                             android:text="Total Payment"
-                            android:textColor="@color/pf_text_primary"
-                            android:textSize="12sp" />
-
+                            android:textSize="12sp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:textColor="@color/pf_text_secondary"
+                            android:paddingTop="8dp"/>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingStart="10dp">
-
+                            android:paddingBottom="12dp">
                             <TextView
                                 android:id="@+id/tv_totalPayment"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:text="Rp 0"
+                                android:textSize="13sp"
                                 android:fontFamily="@font/poppins_medium"
-                                android:text="IDR 000.000.000"
                                 android:textColor="@color/pf_text_primary"
-                                android:textSize="12sp" />
-
+                                android:textAlignment="textStart"/>
                             <TextView
                                 android:id="@+id/tv_bunga"
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:background="@color/white"
+                                android:text="0%"
+                                android:textSize="13sp"
                                 android:fontFamily="@font/poppins_medium"
-                                android:paddingStart="10dp"
-                                android:text="00%"
-                                android:textAlignment="textEnd"
                                 android:textColor="@color/pf_text_primary"
-                                android:textSize="12sp" />
-
+                                android:textAlignment="textEnd"/>
                         </LinearLayout>
+
 
                         <Button
                             android:id="@+id/btn_ajukan"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
                             android:background="@drawable/shapebutton"
-                            android:fontFamily="@font/poppins_semibold"
                             android:text="Ajukan Sekarang"
+                            android:textSize="14sp"
                             android:textColor="@color/white"
-                            android:textSize="12sp" />
+                            android:fontFamily="@font/poppins_semibold"/>
                     </LinearLayout>
+
+
 
 
                 </LinearLayout>

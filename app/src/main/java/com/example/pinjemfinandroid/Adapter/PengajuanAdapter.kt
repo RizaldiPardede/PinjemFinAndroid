@@ -39,7 +39,7 @@ class PengajuanAdapter(private var list: List<PengajuanResponseItem?>) :
         val amountFormatted = NumberFormat.getCurrencyInstance(Locale("in", "ID")).format(amount)
 
         if (item != null) {
-            holder.tv_pinjaman.text = "Rp. $amountFormatted"
+            holder.tv_pinjaman.text = "$amountFormatted"
         }
         when(item?.status ?: "-"){
             "bckt_marketing"->{holder.tvStatus.text = "Status: in Review"
