@@ -97,6 +97,247 @@
                     android:layout_height="match_parent"
                     android:background="@color/white"
                     android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Menu"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/pf_text_primary"
+                        android:textSize="15sp"
+                        />
+                    <GridLayout
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/featureGrid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="4"
+                        android:rowCount="2"
+                        android:padding="16dp"
+                        android:alignmentMode="alignMargins"
+                        android:rowOrderPreserved="false"
+                        android:background="@drawable/base_shape"
+                        android:elevation="5dp"
+                        >
+
+                        <LinearLayout
+                            android:id="@+id/ll_event"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_margin="8dp"
+
+                            >
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="@drawable/shape_circle"
+                                android:padding="7dp"
+                                android:src="@drawable/baseline_emoji_events_24" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Event"
+                                android:textSize="11sp"
+                                android:gravity="center"
+                                android:fontFamily="@font/poppins_medium"/>
+                        </LinearLayout>
+
+                        <!-- Feature 2: Pulsa -->
+                        <LinearLayout
+                            android:id="@+id/ll_pulsa"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_margin="8dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/baseline_edgesensor_low_24"
+                                android:background="@drawable/shape_circle"
+                                android:padding="7dp"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pulsa"
+                                android:textSize="11sp"
+                                android:gravity="center"
+                                android:fontFamily="@font/poppins_medium"/>
+                        </LinearLayout>
+
+                        <!-- Feature 3: Tagihan Listrik -->
+                        <LinearLayout
+                            android:id="@+id/ll_listrik"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_margin="8dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/baseline_electrical_services_24"
+                                android:background="@drawable/shape_circle"
+                                android:padding="7dp"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tagihan Listrik"
+                                android:textSize="11sp"
+                                android:gravity="center"
+                                android:fontFamily="@font/poppins_medium"/>
+                        </LinearLayout>
+
+                        <!-- Feature 4: Tagihan Internet -->
+                        <LinearLayout
+                            android:id="@+id/ll_internet"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_margin="8dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/baseline_network_check_24"
+                                android:background="@drawable/shape_circle"
+                                android:padding="7dp"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tagihan Internet"
+                                android:textSize="11sp"
+                                android:gravity="center"
+                                android:fontFamily="@font/poppins_medium"/>
+                        </LinearLayout>
+
+                        <!-- Feature 5: Ecommerce -->
+                        <LinearLayout
+                            android:id="@+id/ll_ecommerce"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_margin="8dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="@drawable/shape_circle"
+                                android:padding="7dp"
+                                android:src="@drawable/baseline_shopping_cart_24" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ecommerce"
+                                android:textSize="10sp"
+                                android:gravity="center"
+                                android:fontFamily="@font/poppins_medium"/>
+                        </LinearLayout>
+
+                        <!-- Feature 6: QR Bayar -->
+                        <LinearLayout
+                            android:id="@+id/ll_qr"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_margin="8dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/baseline_qr_code_scanner_24"
+                                android:background="@drawable/shape_circle"
+                                android:padding="7dp"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="QR Bayar"
+                                android:textSize="11sp"
+                                android:gravity="center"
+                                android:fontFamily="@font/poppins_medium"/>
+                        </LinearLayout>
+
+                        <!-- Feature 7: Paket Internet -->
+                        <LinearLayout
+                            android:id="@+id/ll_paket"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_margin="8dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/baseline_speaker_phone_24"
+                                android:background="@drawable/shape_circle"
+                                android:padding="7dp"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Paket Internet"
+                                android:textSize="11sp"
+                                android:gravity="center"
+                                android:fontFamily="@font/poppins_medium"/>
+                        </LinearLayout>
+
+                        <!-- Feature 8: Voucher -->
+                        <LinearLayout
+                            android:id="@+id/ll_voucher"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_margin="8dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/baseline_card_giftcard_24"
+                                android:background="@drawable/shape_circle"
+                                android:padding="7dp"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Voucher"
+                                android:textSize="11sp"
+                                android:gravity="center"
+                                android:fontFamily="@font/poppins_medium"
+                                />
+                        </LinearLayout>
+
+                    </GridLayout>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"

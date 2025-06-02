@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.example.pinjemfinandroid.Activity.DashboardActivity
 import com.example.pinjemfinandroid.Activity.NotificationActivity
-import com.example.pinjemfinandroid.Adapter.PlafonAdapter
 import com.example.pinjemfinandroid.Adapter.PlafonHomeAdapter
 import com.example.pinjemfinandroid.Animation.Animation
 import com.example.pinjemfinandroid.Local.NotificationViewModel
@@ -63,7 +62,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
+        plafonViewModel.getAllPlafon()
 
     }
 
@@ -78,13 +77,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         ViewCompat.setZ(binding.shapeprofile, 1f)
         binding.btnSimulasi.backgroundTintList = null
         binding.rvCardhome.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-         plafonViewModel.getAllPlafon()
+
+
         plafonsetup()
         notificationviewModel.refreshUnreadCount()
         val nama = preferenceHelper.getString("username")
 
+        if (nama.isNullOrEmpty()){
+            binding.tvUsername.text = "Halo sobat PinjemFin"
+        }
+        else{
+            binding.tvUsername.text = "Halo "+ nama
+        }
 
-        binding.tvUsername.text = "Halo "+ nama
 
 
         binding.btnSimulasi.setOnClickListener {
@@ -110,7 +115,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-        // Observe hasil
+
         viewModel.simulasiResult.observe(viewLifecycleOwner) { result ->
 
             binding.linHasilSimulasi.visibility = View.VISIBLE
@@ -121,17 +126,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.tvBunga.text = result.bunga.toString()
             binding.tvTenor.text = result.tenor.toString()
             binding.tvTotalPayment.text = result.total_payment?.let { RupiahFormatter.format(it) }
-            val scrollView = binding.vScrollView
-            val targetLayout = binding.btnAjukan
-            scrollView.post {
-                scrollView.smoothScrollTo(0, targetLayout.top)
-                targetLayout.requestFocus()
+            binding.vScrollView.viewTreeObserver.addOnGlobalLayoutListener {
+                val targetTop = binding.linHasilSimulasi.top
+                val targetHeight = binding.linHasilSimulasi.height
+                val scrollY = targetTop + (targetHeight / 2)
+
+                binding.vScrollView.smoothScrollTo(0, scrollY)
+                binding.linHasilSimulasi.requestFocus()
             }
         }
 
-        // Observe error
-        viewModel.registerError.observe(viewLifecycleOwner) { error ->
 
+        viewModel.simulasiError.observe(viewLifecycleOwner) { error ->
+            Toast.makeText(requireContext(),error.message,Toast.LENGTH_SHORT).show()
+            binding.linHasilSimulasi.visibility = View.GONE
         }
 
         binding.notificationContainer.setOnClickListener{
@@ -173,6 +181,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         }
+
+        pengembanganmenu()
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -271,5 +281,40 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
     }
+
+    fun pengembanganmenu(){
+        binding.llEcommerce.setOnClickListener{
+            Toast.makeText(requireContext(), "Menu ini sedang dalam tahap pengambangan", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.llEvent.setOnClickListener{
+            Toast.makeText(requireContext(), "Menu ini sedang dalam tahap pengambangan", Toast.LENGTH_SHORT).show()
+        }
+        binding.llInternet.setOnClickListener{
+            Toast.makeText(requireContext(), "Menu ini sedang dalam tahap pengambangan", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.llPaket.setOnClickListener{
+            Toast.makeText(requireContext(), "Menu ini sedang dalam tahap pengambangan", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.llPulsa.setOnClickListener{
+            Toast.makeText(requireContext(), "Menu ini sedang dalam tahap pengambangan", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.llListrik.setOnClickListener{
+            Toast.makeText(requireContext(), "Menu ini sedang dalam tahap pengambangan", Toast.LENGTH_SHORT).show()
+        }
+        binding.llQr.setOnClickListener{
+            Toast.makeText(requireContext(), "Menu ini sedang dalam tahap pengambangan", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.llVoucher.setOnClickListener{
+            Toast.makeText(requireContext(), "Menu ini sedang dalam tahap pengambangan", Toast.LENGTH_SHORT).show()
+        }
+
+
+    }
+
 
 }

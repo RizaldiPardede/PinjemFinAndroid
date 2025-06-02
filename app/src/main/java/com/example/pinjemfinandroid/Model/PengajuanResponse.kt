@@ -5,6 +5,6 @@ data class PengajuanResponse(
 	val tenor: Int? = null,
 	val angsuran: Any? = null,
 	val bunga: Any? = null,
-	val totalPayment: Any? = null
+	val total_payment: Double? = null
 )
 

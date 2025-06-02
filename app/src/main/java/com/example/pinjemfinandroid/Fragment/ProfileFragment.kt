@@ -230,7 +230,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
     }
 
     override fun onItemClick(position: Int) {
-        Toast.makeText(requireContext(), "Klik item $position", Toast.LENGTH_SHORT).show()
         when (position) {
             0 -> {
                 startActivity(Intent(requireContext(),AddDetailActivity::class.java))
@@ -239,7 +238,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile),MenuAdapter.OnItemCl
                 startActivity(Intent(requireContext(),PlafonActivity::class.java))
             }
             2 -> {
-
+                Toast.makeText(requireContext(), "Menu ini sedang dalam tahap pengambangan", Toast.LENGTH_SHORT).show()
             }
             3 -> {
                 startActivity(Intent(requireContext(),GantiPasswordActivity::class.java))

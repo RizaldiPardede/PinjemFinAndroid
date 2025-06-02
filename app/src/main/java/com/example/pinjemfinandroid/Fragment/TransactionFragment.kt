@@ -12,9 +12,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.pinjemfinandroid.Activity.LoginActivity
+import com.example.pinjemfinandroid.Local.UserRoomViewModel
 import com.example.pinjemfinandroid.Model.PengajuanRequest
 import com.example.pinjemfinandroid.R
 import com.example.pinjemfinandroid.Utils.AlertEvent
@@ -24,6 +26,7 @@ import com.example.pinjemfinandroid.Utils.PreferenceHelper
 import com.example.pinjemfinandroid.Utils.RupiahFormatter
 import com.example.pinjemfinandroid.ViewModel.PengajuanViewModel
 import com.example.pinjemfinandroid.databinding.FragmentTransactionBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +38,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [TransactionFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class TransactionFragment : Fragment(R.layout.fragment_transaction) {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -44,6 +48,7 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private val binding get() = _binding!!
     private val pengajuanViewModel: PengajuanViewModel by activityViewModels()
+    private val userRoomViewModel :UserRoomViewModel by viewModels()
     private var currentPengajuan: PengajuanRequest? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -168,11 +173,24 @@ class TransactionFragment : Fragment(R.layout.fragment_transaction) {
             binding.linearLayoutKalkulasi.visibility = View.VISIBLE
 //            binding.tvAngsuran.text = it.angsuran.toString()
             binding.tvAngsuran.text = RupiahFormatter.format(it.angsuran.toString().toDouble())
-
+            binding.tvNamaSimul.text = preferenceHelper.getString("username")
+            binding.tvEmailSimul.text = preferenceHelper.getString("email")
             binding.tvBunga.text = it.bunga.toString()
-            binding.tvTotalPayment.text = RupiahFormatter.format(it.totalPayment.toString().toDouble())
+            val totalPayment = it.total_payment?.toString()?.toDoubleOrNull() ?: 0.0
+            binding.tvTotalPayment.text = RupiahFormatter.format(totalPayment)
             binding.tvTenor.text = it.tenor.toString()
-            binding.tvPinjaman.text = it.tenor.toString()
+            binding.tvPinjaman.text = it.amount.toString()
+            userRoomViewModel.users.observe(viewLifecycleOwner) { userList ->
+               binding.tvNorek.text =  userList[0].no_rek
+            }
+            binding.vScrollView.viewTreeObserver.addOnGlobalLayoutListener {
+                val targetTop = binding.linearLayoutKalkulasi.top
+                val targetHeight = binding.linearLayoutKalkulasi.height
+                val scrollY = targetTop + (targetHeight / 2)
+
+                binding.vScrollView.smoothScrollTo(0, scrollY)
+                binding.linearLayoutKalkulasi.requestFocus()
+            }
             sharedViewModel.notifyRefresh()
 
         })

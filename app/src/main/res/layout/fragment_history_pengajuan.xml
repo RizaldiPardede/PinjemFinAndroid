@@ -39,17 +39,45 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_pengajuan"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:paddingTop="50dp"
-
         android:layout_marginTop="50dp"
         android:background="@drawable/base_shape"
-        />
+        android:orientation="vertical"
+        >
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <Spinner
+                android:id="@+id/spinnerSortStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingEnd="40dp"
+                android:background="@drawable/reactangleinputext"
+                android:padding="10dp"
+                android:layout_gravity="center_vertical"/>
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/baseline_filter_alt_24"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="12dp"/>
+        </FrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_pengajuan"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="30dp"
+
+
+            />
+    </LinearLayout>
+
 
 
 

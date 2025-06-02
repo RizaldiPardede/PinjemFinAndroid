@@ -83,11 +83,8 @@ class AccountViewModel : ViewModel() {
                     _getAllImageUrl.value = response.body()!!
 
                 } else {
-                    val errorBodyString = response.errorBody()?.string()
-                    ErrorHandler.handleErrorResponse(errorBodyString,
-                        onError = { message -> _getAllImageError.value = message },
-                        onAlert = { alert -> _alertEvent.value = alert }
-                    )
+                    _getAllImageError.value = response.errorBody()?.string()
+
                 }
                 _isLoading.value = false
             }

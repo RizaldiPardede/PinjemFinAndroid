@@ -20,6 +20,7 @@ class PengajuanAdapter(private var list: List<PengajuanResponseItem?>) :
         notifyDataSetChanged()
     }
 
+
     class PengajuanViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tv_pinjaman: TextView = itemView.findViewById(R.id.tv_pinjaman)
         val tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
@@ -66,11 +67,20 @@ class PengajuanAdapter(private var list: List<PengajuanResponseItem?>) :
 
     override fun getItemCount(): Int = list.size
 
-    fun filterByStatus(status: String) {
-        list = if (status == "ALL") {
+    fun filterByStatus(displayStatus: String) {
+        list = if (displayStatus == "Semua") {
             fullList
         } else {
-            fullList.filter { it?.status == status }
+            fullList.filter {
+                val mappedStatus = when (it?.status) {
+                    "bckt_marketing", "bckt_BranchManager" -> "In Review"
+                    "bckt_Operation" -> "Approve"
+                    "Disbursment" -> "Disburse"
+                    "tolak" -> "Rejected"
+                    else -> "-"
+                }
+                mappedStatus.equals(displayStatus, ignoreCase = true)
+            }
         }
         notifyDataSetChanged()
     }

@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -75,6 +77,7 @@ class HistoryPengajuanFragment : Fragment(R.layout.fragment_history_pengajuan) {
         }
 
         pengajuanViewModel.ListpengajuanResult.observe(viewLifecycleOwner){
+
             adapter.updateData(it)
         }
 
@@ -84,6 +87,19 @@ class HistoryPengajuanFragment : Fragment(R.layout.fragment_history_pengajuan) {
             }
         }
 
+        val statusOptions = listOf("Semua", "In Review", "Approve", "Disburse", "Rejected")
+        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, statusOptions)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerSortStatus.adapter = spinnerAdapter
+
+        binding.spinnerSortStatus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedStatus = statusOptions[position]
+                adapter.filterByStatus(selectedStatus)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
 
 
 
